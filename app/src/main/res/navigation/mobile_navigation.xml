@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="ipvc.estg.saveqr.ui.login.LoginFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
+            app:destination="@id/nav_home_second" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_home_second"
+        android:name="ipvc.estg.saveqr.ui.login.LoginFragment"
+        android:label="@string/home_second"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
+            app:destination="@id/nav_home" />
+
+        <argument
+            android:name="myArg"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_registar"
+        android:name="ipvc.estg.saveqr.ui.registar.RegistarFragment"
+        android:label="@string/registar"
+        tools:layout="@layout/fragment_registar" />
+
+    <fragment
+        android:id="@+id/nav_listapasta"
+        android:name="ipvc.estg.saveqr.ui.listapasta.ListaPastaFragment"
+        android:label="@string/lista_pasta"
+        tools:layout="@layout/fragment_listapasta" />
+
+    <fragment
+        android:id="@+id/nav_listaQrFragment"
+        android:name="ipvc.estg.saveqr.ui.listaqr.ListaQrFragment"
+        android:label="@string/lqr"
+        tools:layout="@layout/lista_q_r_fragment" />
+    <fragment
+        android:id="@+id/nav_addQrUpdate"
+        android:name="ipvc.estg.saveqr.ui.addqrupdate.AddQrUpdate"
+        android:label="@string/lqr"
+        tools:layout="@layout/add_qr_update_fragment" />
+    <fragment
+        android:id="@+id/nav_detalhesQR"
+        android:name="ipvc.estg.saveqr.ui.detalhesQR.DetalhesQR"
+        android:label="@string/dqrcode"
+        tools:layout="@layout/detalhes_q_r_fragment" />
+
+
+</navigation>
