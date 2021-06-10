@@ -12,6 +12,8 @@ import ipvc.estg.saveqr.ui.addqrupdate.AddQrUpdateViewModel
 
 class AddQrUpdate : Fragment() {
 //pena
+
+//pena3
     companion object {
         fun newInstance() = AddQrUpdate()
     }
