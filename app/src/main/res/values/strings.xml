@@ -26,5 +26,7 @@
     <string name="lqr">Listar QR - Code</string>
     <string name="dqrcode">Detalhes QR - Code</string>
     <string name="s_conx_int">Sem conexão internet</string>
+    <string name="qr_hint">lerqr_hint</string>
+    <string name="privacy_policy">privacy_policy</string>
 
 </resources>
