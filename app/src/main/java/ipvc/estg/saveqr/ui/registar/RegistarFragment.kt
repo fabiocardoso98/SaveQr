@@ -16,10 +16,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import ipvc.estg.saveqr.R
+import ipvc.estg.saveqr.api.Communicator
 import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.endpoints.usersEndpoint
 import ipvc.estg.saveqr.api.models.UsersReturn
 import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.fragment_registar.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +35,8 @@ class RegistarFragment : Fragment() {
     private lateinit var txt_pwd: EditText
     private lateinit var txt_confirm_pwd: EditText
     private lateinit var txt_tlm: EditText
+    private lateinit var communicator: Communicator
+
 
     private lateinit var registarViewModel: RegistarViewModel
 
@@ -59,7 +63,13 @@ class RegistarFragment : Fragment() {
         })
 
 
-        add.setOnClickListener {
+        communicator = activity as Communicator
+
+
+
+
+
+        root.add.setOnClickListener {
 
             if (txt_email.text.isNullOrEmpty() || txt_name.text.isNullOrEmpty() || txt_username.text.isNullOrEmpty() ||
                 txt_pwd.text.isNullOrEmpty() || txt_confirm_pwd.text.isNullOrEmpty() || txt_tlm.text.isNullOrEmpty()
@@ -102,7 +112,9 @@ class RegistarFragment : Fragment() {
                     ) {
                         if (response.isSuccessful) {
                             Log.d("***","Sucesso")
+                            communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
                             Navigation.createNavigateOnClickListener(R.id.nav_home, null)
+
 
 
                         } else {
