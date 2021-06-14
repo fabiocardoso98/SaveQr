@@ -24,7 +24,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity(), Communicator {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -52,8 +52,8 @@ class MainActivity : AppCompatActivity(), Communicator {
             navController.navigate(R.id.nav_registar);
         }
 
-        val request = ServiceBuilder.buildService(usersEndpoint::class.java)
-        val call = request.getUsers()
+       /*val request = ServiceBuilder.buildService(usersEndpoint::class.java)
+       val call = request.getUsers()
 
         call.enqueue(object : Callback<UsersReturn> {
             override fun onResponse(call: Call<UsersReturn>, response: Response<UsersReturn>) {
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), Communicator {
                 Toast.makeText(applicationContext, "DEU ERRO", Toast.LENGTH_LONG).show()
                 Log.d("ENDPONT", t.toString())
             }
-        })
+        }) */
 
     }
 
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), Communicator {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    override fun passDataconn(
+    /*override fun passDataconn(
         id: Int,
         nome: String,
         username: String,
@@ -95,7 +95,8 @@ class MainActivity : AppCompatActivity(), Communicator {
 
         transition.replace(R.id.drawer_layout, fragpasta)
         transition.commit()
-    }
+    }*/
+
 
 
 }

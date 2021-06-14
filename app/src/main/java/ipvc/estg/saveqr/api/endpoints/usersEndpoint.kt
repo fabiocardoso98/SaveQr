@@ -14,12 +14,12 @@ interface usersEndpoint {
     fun getUsers(): Call<UsersReturn>
 
     @FormUrlEncoded
-    @POST("/users")
+    @POST("/user")
     fun postUser(
         @Field("name") name: String?,
         @Field("username") username: String?,
         @Field("email") email: String?,
-        @Field("token") token: String?
+        @Field("password") password: String?
     ): Call<UsersReturn>
 
 }

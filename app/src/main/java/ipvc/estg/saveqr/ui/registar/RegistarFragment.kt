@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
@@ -63,10 +64,7 @@ class RegistarFragment : Fragment() {
         })
 
 
-        communicator = activity as Communicator
-
-
-
+        // communicator = activity as Communicator
 
 
         root.add.setOnClickListener {
@@ -110,27 +108,32 @@ class RegistarFragment : Fragment() {
                         call: Call<UsersReturn>,
                         response: Response<UsersReturn>
                     ) {
-                        if (response.isSuccessful) {
-                            Log.d("***","Sucesso")
-                            communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
-                            Navigation.createNavigateOnClickListener(R.id.nav_home, null)
 
+
+                        if (response.isSuccessful) {
+                            // Log.d("***","Sucesso")
+                            Toast.makeText(activity, "Sucesso!", Toast.LENGTH_SHORT).show();
+                            // communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
+                          //  getActivity()?.getSupportFragmentManager()?.beginTransaction().remove(this@RegistarFragment).commit();
 
 
                         } else {
                             Log.d("***", "Falhou")
 
                         }
-                    }
-                    //  override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                    //        Toast.makeText(this@firstActivity, t.toString()/*getString(R.string.erro_campos)*/, Toast.LENGTH_SHORT).show()
-                    //      }
 
+                    }
 
                     override fun onFailure(call: Call<UsersReturn>, t: Throwable) {
-                        Toast.makeText(activity, "Erro ao registar!", Toast.LENGTH_SHORT).show();
+
                     }
+
                 })
+                Toast.makeText(activity, "Sucesso!", Toast.LENGTH_SHORT).show();
+              //  Navigation.createNavigateOnClickListener(R.id.nav_home, null)
+                Navigation.findNavController(requireView()).navigate(R.id.nav_listapasta);
+                //parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
             }
         }
 
