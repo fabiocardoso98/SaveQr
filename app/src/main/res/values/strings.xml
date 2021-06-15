@@ -28,5 +28,13 @@
     <string name="s_conx_int">Sem conexão internet</string>
     <string name="qr_hint">lerqr_hint</string>
     <string name="privacy_policy">privacy_policy</string>
+    <string name="search">search</string>
+    <string name="copy">copiar</string>
+    <string name="share">partilhar</string>
+    <string name="text_copied" />
+    <string name="flashlight_turned_on">flash on</string>
+    <string name="flashlight_turned_off">flash off</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
 
 </resources>
