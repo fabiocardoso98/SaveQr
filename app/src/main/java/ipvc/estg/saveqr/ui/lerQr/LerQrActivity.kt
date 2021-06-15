@@ -85,6 +85,7 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
             result?.text.toString())
         mHistoryOrm?.add(this, history)
         mPresenter.qrCodeScanned(history)
+
     }
 
     override fun showSuccessScanningDialog(result: String) {
