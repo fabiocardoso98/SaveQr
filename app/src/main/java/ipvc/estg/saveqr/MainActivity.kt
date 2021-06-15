@@ -3,6 +3,8 @@ package ipvc.estg.saveqr
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -24,7 +26,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Communicator {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -45,14 +47,19 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home, R.id.nav_listapasta
             ), drawerLayout
         )
+
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         val frag = intent.getStringExtra("EXTRA")
         if (frag == "Registar") {
-            navController.navigate(R.id.nav_registar);
+            val transition = supportFragmentManager.beginTransaction()
+            val fragreg = ListaPastaFragment()
+            transition.replace(R.id.drawer_layout, fragreg)
+            transition.commit()
         }
 
-       /*val request = ServiceBuilder.buildService(usersEndpoint::class.java)
+       val request = ServiceBuilder.buildService(usersEndpoint::class.java)
        val call = request.getUsers()
 
         call.enqueue(object : Callback<UsersReturn> {
@@ -64,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "DEU ERRO", Toast.LENGTH_LONG).show()
                 Log.d("ENDPONT", t.toString())
             }
-        }) */
+        })
 
     }
 
@@ -79,23 +86,21 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    /*override fun passDataconn(
-        id: Int,
-        nome: String,
-        username: String,
-        email: String,
-        token: String
-    ) {
-        val bundle = Bundle()
-        bundle.putInt("message", id)
+    override fun passDataconn(
 
-        val transition = this.supportFragmentManager.beginTransaction()
+        nome: String
+
+    ) {
+
+        val bundle = Bundle()
+        bundle.putString("txt", nome)
         val fragpasta = ListaPastaFragment()
         fragpasta.arguments = bundle
+        val transition = supportFragmentManager.beginTransaction()
 
-        transition.replace(R.id.drawer_layout, fragpasta)
+        transition.replace(R.id.nav_host_fragment, fragpasta)
         transition.commit()
-    }*/
+    }
 
 
 

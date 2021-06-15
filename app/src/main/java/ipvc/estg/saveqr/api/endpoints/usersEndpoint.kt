@@ -20,6 +20,6 @@ interface usersEndpoint {
         @Field("username") username: String?,
         @Field("email") email: String?,
         @Field("password") password: String?
-    ): Call<UsersReturn>
+    ): Call<Users>
 
 }

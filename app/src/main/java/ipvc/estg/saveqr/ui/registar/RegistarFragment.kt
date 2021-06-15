@@ -1,9 +1,6 @@
 package ipvc.estg.saveqr.ui.registar
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.provider.Settings.Global.putInt
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +9,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
@@ -20,13 +16,16 @@ import ipvc.estg.saveqr.R
 import ipvc.estg.saveqr.api.Communicator
 import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.endpoints.usersEndpoint
+import ipvc.estg.saveqr.api.models.Users
 import ipvc.estg.saveqr.api.models.UsersReturn
+import ipvc.estg.saveqr.ui.listapasta.ListaPastaFragment
 import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.fragment_registar.*
 import kotlinx.android.synthetic.main.fragment_registar.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.math.log
+
 
 class RegistarFragment : Fragment() {
 
@@ -59,15 +58,15 @@ class RegistarFragment : Fragment() {
         txt_confirm_pwd = root.findViewById(R.id.editText13)
         txt_tlm = root.findViewById(R.id.tlm)
         registarViewModel.text.observe(viewLifecycleOwner, Observer {
-            //   textView.text = it
 
         })
 
 
-        // communicator = activity as Communicator
+         communicator = activity as Communicator
 
 
         root.add.setOnClickListener {
+
 
             if (txt_email.text.isNullOrEmpty() || txt_name.text.isNullOrEmpty() || txt_username.text.isNullOrEmpty() ||
                 txt_pwd.text.isNullOrEmpty() || txt_confirm_pwd.text.isNullOrEmpty() || txt_tlm.text.isNullOrEmpty()
@@ -103,18 +102,20 @@ class RegistarFragment : Fragment() {
                     txt_pwd.text.toString()
 
                 )
-                call.enqueue(object : Callback<UsersReturn> {
+                call.enqueue(object : Callback<Users> {
                     override fun onResponse(
-                        call: Call<UsersReturn>,
-                        response: Response<UsersReturn>
+                        call: Call<Users>,
+                        response: Response<Users>
                     ) {
 
 
                         if (response.isSuccessful) {
                             // Log.d("***","Sucesso")
                             Toast.makeText(activity, "Sucesso!", Toast.LENGTH_SHORT).show();
-                            // communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
-                          //  getActivity()?.getSupportFragmentManager()?.beginTransaction().remove(this@RegistarFragment).commit();
+                            communicator.passDataconn(root.nome.text.toString())
+                            Navigation.findNavController(requireView()).navigate(R.id.nav_listapasta,null);
+                          //  communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
+                           // getActivity()?.getSupportFragmentManager()?.beginTransaction().remove(this@RegistarFragment).commit();
 
 
                         } else {
@@ -124,15 +125,13 @@ class RegistarFragment : Fragment() {
 
                     }
 
-                    override fun onFailure(call: Call<UsersReturn>, t: Throwable) {
+                    override fun onFailure(call: Call<Users>, t: Throwable) {
 
                     }
 
                 })
-                Toast.makeText(activity, "Sucesso!", Toast.LENGTH_SHORT).show();
-              //  Navigation.createNavigateOnClickListener(R.id.nav_home, null)
-                Navigation.findNavController(requireView()).navigate(R.id.nav_listapasta);
-                //parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+
 
             }
         }

@@ -30,13 +30,11 @@ class ListaPastaFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_listapasta, container, false)
         val textView4: TextView = root.findViewById(R.id.textView4)
         listaPastaViewModel.text.observe(viewLifecycleOwner, Observer {
-       //     textView.text = it
 
         })
 
 
-        nomeTxt = arguments?.getInt("message",id).toString()
-
+        nomeTxt = arguments?.getString("txt")
         root.textView4.text = nomeTxt
 
         textView4.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_listaQrFragment, null))
