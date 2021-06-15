@@ -61,4 +61,10 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
+
+    //GerarQr
+    implementation 'androidmads.library.qrgenearator:QRGenearator:1.0.3'
+    implementation 'com.google.zxing:core:3.4.0'
+
+
 }
