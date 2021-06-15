@@ -16,3 +16,10 @@ data class UsersReturn(
     val data: List<Users>,
     val error: String
 )
+
+data class UsersRegisterReturn(
+    val msg: String,
+    val status: String,
+    val data: Users,
+    val error: String
+)
