@@ -32,5 +32,6 @@
     <string name="login_p" />
     <string name="login_shared" />
     <string name="id_utilizador" />
+    <string name="status" />
 
 </resources>

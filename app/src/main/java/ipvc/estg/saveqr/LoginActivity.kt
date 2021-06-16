@@ -32,11 +32,14 @@ class LoginActivity : AppCompatActivity() {
         )
         val idLogin = loginShared.getInt(getString(R.string.idLogin), 0)
         val userLogin = loginShared.getString(getString(R.string.userLogin), "")
+        val status = loginShared.getBoolean(getString(R.string.status),true)
 
-        if ((!userLogin.equals("")) && (idLogin != 0)) {
-            val intent = Intent(this@LoginActivity, SplashScreen::class.java)
+        if ((!userLogin.equals("")) && (idLogin != 0) && status) {
+            val intent = Intent(this@LoginActivity, MainActivity::class.java)
             startActivity(intent)
         }
+
+
 
 
         registar.setOnClickListener {
@@ -49,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
 
             var username = findViewById<EditText>(R.id.email).text.toString()
             var password = findViewById<EditText>(R.id.password).text.toString()
-            val intent = Intent(this, RegistarActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             val check: Boolean = findViewById<CheckBox>(R.id.guardar).isChecked
 
             if (username.isNullOrEmpty() || password.isNullOrEmpty()) {
@@ -71,22 +74,19 @@ class LoginActivity : AppCompatActivity() {
                         response: Response<UsersRegisterReturn>
                     ) {
                         if (response.body()?.status=="success") {
-                            loginShared.edit().putInt(
-                                getString(R.string.idLogin),
-                                response.body()!!.data.id.toInt()
-                            ).commit()
-                            loginShared.edit().putString(
-                                getString(R.string.userLogin),
-                                response.body()!!.data.username
-                            ).commit()
-
+                            if(check){
+                                loginShared.edit().putInt(getString(R.string.idLogin), response.body()?.data!!.id).commit()
+                                loginShared.edit().putString(getString(R.string.userLogin), response.body()?.data!!.username).commit()
+                                loginShared.edit().putBoolean(getString(R.string.status), true).commit()
+                            }
+                            else{
+                                loginShared.edit().putInt(getString(R.string.idLogin), response.body()?.data!!.id).commit()
+                                loginShared.edit().putString(getString(R.string.userLogin), response.body()?.data!!.username).commit()
+                                loginShared.edit().putBoolean(getString(R.string.status), false).commit()
+                            }
                             startActivity(intent)
-                        } else {
-                            Toast.makeText(
-                                this@LoginActivity,
-                                "Erro, tente mais tarde!",
-                                Toast.LENGTH_SHORT
-                            ).show()
+
+
                         }
                     }
 
@@ -105,6 +105,7 @@ class LoginActivity : AppCompatActivity() {
 
 
     }
+
 
 
 }

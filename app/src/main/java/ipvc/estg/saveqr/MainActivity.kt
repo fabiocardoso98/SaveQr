@@ -18,6 +18,7 @@ import com.google.android.material.navigation.NavigationView
 import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.endpoints.usersEndpoint
 import ipvc.estg.saveqr.api.models.Users
+import ipvc.estg.saveqr.api.models.UsersReturn
 import ipvc.estg.saveqr.ui.listapasta.ListaPastaFragment
 import retrofit2.Call
 import retrofit2.Callback
@@ -55,23 +56,20 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home, R.id.nav_listapasta), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        val fraglog = intent.getStringExtra("EXTRA")
-        if (fraglog == "ListarP") {
-            val transition = supportFragmentManager.beginTransaction()
-            val fragreg = ListaPastaFragment()
-            transition.replace(R.id.drawer_layout, fragreg)
-            transition.commit()
+        val frag = intent.getStringExtra("EXTRA")
+        if (frag == "Listar") {
+            navController.navigate(R.id.nav_listapasta);
         }
 
         val request = ServiceBuilder.buildService(usersEndpoint::class.java)
         val call = request.getUsers()
 
-        call.enqueue(object : Callback<Users> {
-            override fun onResponse(call: Call<Users>, response: Response<Users>) {
+        call.enqueue(object : Callback<UsersReturn> {
+            override fun onResponse(call: Call<UsersReturn>, response: Response<UsersReturn>) {
                 //Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_LONG).show()
             }
 
-            override fun onFailure(call: Call<Users>, t: Throwable) {
+            override fun onFailure(call: Call<UsersReturn>, t: Throwable) {
                 Toast.makeText(applicationContext, "DEU ERRO", Toast.LENGTH_LONG).show()
                 Log.d("ENDPONT", t.toString())
             }
@@ -82,9 +80,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-private fun <T> Call<T>.enqueue(callback: Callback<Users>) {
-    TODO("Not yet implemented")
-}
 
 override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -95,5 +90,7 @@ override fun onCreateOptionsMenu(menu: Menu): Boolean {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+    override fun onBackPressed() {
     }
 }
