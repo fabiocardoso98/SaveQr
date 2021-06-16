@@ -13,7 +13,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.fragment_login.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         // Build a GoogleSignInClient with the options specified by gso.
         //    val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        imageView.setOnClickListener (Navigation.createNavigateOnClickListener(R.id.nav_listapasta, null))
 
 
 
@@ -48,11 +46,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home, R.id.nav_listapasta), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        val frag = intent.getStringExtra("EXTRA")
-        if (frag=="Registar")
-        {
-           navController.navigate(R.id.nav_registar);
-        }
+      //  val frag = intent.getStringExtra("EXTRA")
+        //if (frag=="Registar")
+       // {
+       //    navController.navigate(R.id.nav_registar);
+        // }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

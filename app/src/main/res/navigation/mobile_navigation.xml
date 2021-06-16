@@ -5,35 +5,8 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/nav_home">
 
-    <fragment
-        android:id="@+id/nav_home"
-        android:name="ipvc.estg.saveqr.ui.login.LoginFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_login">
 
-        <action
-            android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
-            app:destination="@id/nav_home_second" />
-    </fragment>
-    <fragment
-        android:id="@+id/nav_home_second"
-        android:name="ipvc.estg.saveqr.ui.login.LoginFragment"
-        android:label="@string/home_second"
-        tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
-            app:destination="@id/nav_home" />
 
-        <argument
-            android:name="myArg"
-            app:argType="string" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_registar"
-        android:name="ipvc.estg.saveqr.ui.registar.RegistarFragment"
-        android:label="@string/registar"
-        tools:layout="@layout/fragment_registar" />
 
     <fragment
         android:id="@+id/nav_listapasta"

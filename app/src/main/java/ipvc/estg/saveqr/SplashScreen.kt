@@ -26,7 +26,7 @@ class SplashScreen : AppCompatActivity() {
 
             Handler().postDelayed({
                 if (registo==0)
-                startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, LoginActivity::class.java))
                 // close this activity
                 finish()
 
