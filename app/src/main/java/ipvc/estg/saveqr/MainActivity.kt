@@ -2,7 +2,9 @@ package ipvc.estg.saveqr
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -13,6 +15,13 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import ipvc.estg.saveqr.api.ServiceBuilder
+import ipvc.estg.saveqr.api.endpoints.usersEndpoint
+import ipvc.estg.saveqr.api.models.Users
+import ipvc.estg.saveqr.ui.listapasta.ListaPastaFragment
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,14 +55,38 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home, R.id.nav_listapasta), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-      //  val frag = intent.getStringExtra("EXTRA")
-        //if (frag=="Registar")
-       // {
-       //    navController.navigate(R.id.nav_registar);
-        // }
+        val fraglog = intent.getStringExtra("EXTRA")
+        if (fraglog == "ListarP") {
+            val transition = supportFragmentManager.beginTransaction()
+            val fragreg = ListaPastaFragment()
+            transition.replace(R.id.drawer_layout, fragreg)
+            transition.commit()
+        }
+
+        val request = ServiceBuilder.buildService(usersEndpoint::class.java)
+        val call = request.getUsers()
+
+        call.enqueue(object : Callback<Users> {
+            override fun onResponse(call: Call<Users>, response: Response<Users>) {
+                //Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_LONG).show()
+            }
+
+            override fun onFailure(call: Call<Users>, t: Throwable) {
+                Toast.makeText(applicationContext, "DEU ERRO", Toast.LENGTH_LONG).show()
+                Log.d("ENDPONT", t.toString())
+            }
+        })
+
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+
+
+
+private fun <T> Call<T>.enqueue(callback: Callback<Users>) {
+    TODO("Not yet implemented")
+}
+
+override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true

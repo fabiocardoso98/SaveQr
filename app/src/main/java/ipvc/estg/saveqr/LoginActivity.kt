@@ -6,12 +6,16 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
+import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.endpoints.usersEndpoint
 import ipvc.estg.saveqr.api.models.Users
+import ipvc.estg.saveqr.api.models.UsersRegisterReturn
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,20 +26,15 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        var txt_email: EditText
-        var txt_pwd: EditText
 
-        val loginShared: SharedPreferences =
-            getSharedPreferences(getString(R.string.sharedLogin), Context.MODE_PRIVATE)
+        val loginShared: SharedPreferences = getSharedPreferences(
+            getString(R.string.login_p), Context.MODE_PRIVATE
+        )
         val idLogin = loginShared.getInt(getString(R.string.idLogin), 0)
         val userLogin = loginShared.getString(getString(R.string.userLogin), "")
 
-        txt_email = findViewById(R.id.email)
-        txt_pwd = findViewById(R.id.password)
-
-
         if ((!userLogin.equals("")) && (idLogin != 0)) {
-            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+            val intent = Intent(this@LoginActivity, SplashScreen::class.java)
             startActivity(intent)
         }
 
@@ -43,47 +42,45 @@ class LoginActivity : AppCompatActivity() {
         registar.setOnClickListener {
             val intent = Intent(this, RegistarActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         add.setOnClickListener {
-            val email: String = findViewById<EditText>(R.id.email).text.toString()
-            val password: String = findViewById<EditText>(R.id.password).text.toString()
+
+            var username = findViewById<EditText>(R.id.email).text.toString()
+            var password = findViewById<EditText>(R.id.password).text.toString()
+            val intent = Intent(this, RegistarActivity::class.java)
             val check: Boolean = findViewById<CheckBox>(R.id.guardar).isChecked
 
-            if (txt_email.text.isNullOrEmpty() ||
-                txt_pwd.text.isNullOrEmpty() ) {
-                if (txt_email.text.isNullOrEmpty()) {
-                    txt_email.error = "Empty email"
+            if (username.isNullOrEmpty() || password.isNullOrEmpty()) {
+
+                if (username.isNullOrEmpty()) {
+                    Toast.makeText(this@LoginActivity, "Username empty!", Toast.LENGTH_SHORT).show()
                 }
-                if (txt_pwd.text.isNullOrEmpty()) {
-                    txt_pwd.error = "Empty name"
+                if (password.isNullOrEmpty()) {
+                    Toast.makeText(this@LoginActivity, "Password empty!", Toast.LENGTH_SHORT).show()
                 }
             } else {
 
-
                 val request = ServiceBuilder.buildService(usersEndpoint::class.java)
-                val call = request.LogUser(email, password)
+                val call = request.LogUser(username, password)
 
-                call.enqueue(object : Callback<Users> {
-                    override fun onResponse(call: Call<Users>, response: Response<Users>) {
-                        if (response.isSuccessful) {
-                            val intent = Intent(this@LoginActivity, SplashScreen::class.java)
-                            Toast.makeText(
-                                this@LoginActivity,
-                                email,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                call.enqueue(object : Callback<UsersRegisterReturn> {
+                    override fun onResponse(
+                        call: Call<UsersRegisterReturn>,
+                        response: Response<UsersRegisterReturn>
+                    ) {
+                        if (response.body()?.status=="success") {
                             loginShared.edit().putInt(
                                 getString(R.string.idLogin),
-                                response.body()?.id.toString().toInt()
+                                response.body()!!.data.id.toInt()
                             ).commit()
                             loginShared.edit().putString(
                                 getString(R.string.userLogin),
-                                response.body()?.username.toString()
+                                response.body()!!.data.username
                             ).commit()
 
                             startActivity(intent)
-                            finish()
                         } else {
                             Toast.makeText(
                                 this@LoginActivity,
@@ -91,23 +88,24 @@ class LoginActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-
                     }
 
-                    override fun onFailure(call: Call<Users>, t: Throwable) {
-                        Log.d("INTERNET LOGIN", t.toString())
+                    override fun onFailure(call: Call<UsersRegisterReturn>, t: Throwable) {
                         Toast.makeText(
                             this@LoginActivity,
                             "Erro, tente mais tarde!!",
                             Toast.LENGTH_SHORT
                         ).show()
-
                     }
-
-
                 })
+
             }
 
         }
+
+
     }
+
+
 }
+

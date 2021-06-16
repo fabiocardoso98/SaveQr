@@ -138,6 +138,7 @@
 
     <ImageView
         android:id="@+id/add"
+        android:onClick="login"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="64dp"

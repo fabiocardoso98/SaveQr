@@ -29,5 +29,8 @@
     <string name="sharedLogin">sharedLogin</string>
     <string name="idLogin">idlog</string>
     <string name="userLogin">userlog</string>
+    <string name="login_p" />
+    <string name="login_shared" />
+    <string name="id_utilizador" />
 
 </resources>
