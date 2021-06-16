@@ -26,5 +26,8 @@
     <string name="lqr">Listar QR - Code</string>
     <string name="dqrcode">Detalhes QR - Code</string>
     <string name="s_conx_int">Sem conexão internet</string>
+    <string name="sharedLogin">sharedLogin</string>
+    <string name="idLogin">idlog</string>
+    <string name="userLogin">userlog</string>
 
 </resources>
