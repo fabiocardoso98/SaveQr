@@ -11,7 +11,10 @@ import retrofit2.http.POST
 
 interface QrCodesEndpoint {
     @GET("/qrcodes")
-    fun getQrcodes(): Call<QrCodesRegisterReturn>
+    fun getQrcodes(): Call<QrCodesReturn>
+
+    @GET("/qrcodes/user")
+    fun getQrcodesUser(): Call<QrCodesReturn>
 
     @FormUrlEncoded
     @POST("/qrcodes")

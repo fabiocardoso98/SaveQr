@@ -59,14 +59,14 @@ class ListaQrFragment : Fragment() {
         val call = request.getQrcodes()
         val allReportsLiveData = MutableLiveData<List<Qrcodes?>>()
 
-        call.enqueue(object  : Callback<List<QrCodesRegisterReturn>> {
-            override fun onResponse(call: Call<List<QrCodesRegisterReturn>>, response: Response<List<QrCodesRegisterReturn>>) {
+        call.enqueue(object  : Callback<QrCodesReturn> {
+            override fun onResponse(call: Call<QrCodesReturn>, response: Response<QrCodesReturn>) {
 
                 if(response.isSuccessful) {
-                    var arrAllReports: Array<Qrcodes?> = arrayOfNulls<Qrcodes>(response.body()!!.size)
+                    var arrAllReports: Array<Qrcodes?> = arrayOfNulls<Qrcodes>(response.body()!!.data.size)
 
-                    for ((index, item) in response.body()!!.withIndex()) {
-                        arrAllReports[index] = item.data
+                    for ((index, item) in response.body()!!.data.withIndex()) {
+                        arrAllReports[index] = item
                     }
 
                     var allReports: List<Qrcodes?> = arrAllReports.asList()
@@ -83,7 +83,7 @@ class ListaQrFragment : Fragment() {
                 }
             }
 
-            override fun onFailure(call: Call<List<QrCodesRegisterReturn>>, t: Throwable) {
+            override fun onFailure(call: Call<QrCodesReturn>, t: Throwable) {
                 Toast.makeText( activity, "DEU ERRO", Toast.LENGTH_LONG).show()
             }
         })
