@@ -104,6 +104,7 @@ class LoginActivity : AppCompatActivity() {
                         response: Response<UsersRegisterReturn>
                     ) {
                         if (response.body()?.status=="success") {
+
                             if(check){
                                 loginShared.edit().putInt(getString(R.string.idLogin), response.body()?.data!!.id).commit()
                                 loginShared.edit().putString(getString(R.string.userLogin), response.body()?.data!!.username).commit()
