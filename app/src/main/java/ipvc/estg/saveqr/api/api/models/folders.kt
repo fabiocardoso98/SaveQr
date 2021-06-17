@@ -1,20 +1,19 @@
-package ipvc.estg.saveqr.api.models
+package ipvc.estg.saveqr.api.api.models
+
 
 import java.util.*
 
-class Folders(
+data class Folders(
     val id: Int,
     val name: String,
-    val mg: String,
+    val img: String,
     val cor: String,
     val partilhado: Boolean,
     val dataAdicionado: Date,
     val dataAtualizado: Date,
-    val users_id: Int,
-    val categories_id: Int
-
+    val categoryId: Int,
+    val userId: Int
 )
-
 data class FoldersReturn(
     val msg: String,
     val status: String,
