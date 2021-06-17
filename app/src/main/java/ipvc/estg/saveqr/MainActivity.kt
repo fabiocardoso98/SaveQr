@@ -25,6 +25,7 @@ import ipvc.estg.saveqr.api.endpoints.usersEndpoint
 import ipvc.estg.saveqr.api.models.Users
 import ipvc.estg.saveqr.api.models.UsersReturn
 import ipvc.estg.saveqr.ui.listapasta.ListaPastaFragment
+import ipvc.estg.saveqr.ui.listapasta.ListaPastaViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         navView.setNavigationItemSelectedListener (this)
         val frag = intent.getStringExtra("EXTRA")
         if (frag == "Listar") {
-            navController.navigate(R.id.nav_listapasta);
+           // navController.navigate(R.id.nav_listapasta);
         }
 
         val request = ServiceBuilder.buildService(usersEndpoint::class.java)
@@ -113,6 +114,14 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
                 }
                 var intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
+            }
+            R.id.nav_scanqr -> {
+                val navController = findNavController(R.id.nav_host_fragment)
+                navController.navigate(R.id.nav_addQrUpdate);
+            }
+            R.id.nav_listapasta ->{
+                val navController = findNavController(R.id.nav_host_fragment)
+                navController.navigate(R.id.nav_listapasta);
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)

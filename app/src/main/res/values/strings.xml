@@ -35,5 +35,6 @@
     <string name="status" />
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
+    <string name="scanqr">Scan QR - Code</string>
 
 </resources>
