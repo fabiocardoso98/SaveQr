@@ -56,7 +56,7 @@ class ListaQrFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val request = ServiceBuilder.buildService(ipvc.estg.saveqr.api.endpoints.QrCodesEndpoint::class.java)
-        val call = request.getQrcodes()
+        val call = request.getQrCodeByUser(5)
         val allReportsLiveData = MutableLiveData<List<Qrcodes?>>()
 
         call.enqueue(object  : Callback<QrCodesReturn> {

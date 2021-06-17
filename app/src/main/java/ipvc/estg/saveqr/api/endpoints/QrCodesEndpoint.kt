@@ -4,17 +4,14 @@ import ipvc.estg.saveqr.api.models.QrCodesRegisterReturn
 import ipvc.estg.saveqr.api.models.QrCodesReturn
 import ipvc.estg.saveqr.api.models.Qrcodes
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface QrCodesEndpoint {
     @GET("/qrcodes")
     fun getQrcodes(): Call<QrCodesReturn>
 
-    @GET("/qrcodes/user")
-    fun getQrcodesUser(): Call<QrCodesReturn>
+    @GET("/qrcodes?{userId}")
+    fun getQrCodeByUser(@Path("userId") userId: Int): Call<QrCodesReturn>
 
     @FormUrlEncoded
     @POST("/qrcodes")
