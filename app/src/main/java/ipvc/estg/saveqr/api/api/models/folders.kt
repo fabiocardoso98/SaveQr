@@ -1,11 +1,12 @@
 package ipvc.estg.saveqr.api.api.models
 
 
+import ipvc.estg.saveqr.api.models.Qrcodes
 import java.util.*
 
 data class Folders(
     val id: Int,
-    val name: String,
+    val nome: String,
     val img: String,
     val cor: String,
     val partilhado: Boolean,
@@ -18,5 +19,12 @@ data class FoldersReturn(
     val msg: String,
     val status: String,
     val data: List<Folders>,
+    val error: String
+)
+
+data class FoldersRegisterReturn(
+    val msg: String,
+    val status: String,
+    val data: Folders,
     val error: String
 )
