@@ -57,6 +57,7 @@ class ListaQrFragment : Fragment() {
 
         val request = ServiceBuilder.buildService(ipvc.estg.saveqr.api.endpoints.QrCodesEndpoint::class.java)
         val call = request.getQrCodeByUser(5)
+        //val call = request.getQrcodes()
         val allReportsLiveData = MutableLiveData<List<Qrcodes?>>()
 
         call.enqueue(object  : Callback<QrCodesReturn> {

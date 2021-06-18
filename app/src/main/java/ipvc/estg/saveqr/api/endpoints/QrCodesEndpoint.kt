@@ -7,11 +7,13 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface QrCodesEndpoint {
+    //este da
     @GET("/qrcodes")
     fun getQrcodes(): Call<QrCodesReturn>
 
-    @GET("/qrcodes?{userId}")
-    fun getQrCodeByUser(@Path("userId") userId: Int): Call<QrCodesReturn>
+    //este nao da
+    @GET("/qrcodes/user")
+    fun getQrCodeByUser(@Query("userId") userId: Int?): Call<QrCodesReturn>
 
     @FormUrlEncoded
     @POST("/qrcodes")
