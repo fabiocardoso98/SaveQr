@@ -12,8 +12,8 @@ interface QrCodesEndpoint {
     fun getQrcodes(): Call<QrCodesReturn>
 
     //este nao da
-    @GET("/qrcodes/user")
-    fun getQrCodeByUser(@Query("userId") userId: Int?): Call<QrCodesReturn>
+    @GET("/qrcodes/user/{userId}")
+    fun getQrCodeByUser(@Path("userId") userId: Int?): Call<QrCodesReturn>
 
     @FormUrlEncoded
     @POST("/qrcodes")
