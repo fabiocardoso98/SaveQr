@@ -40,9 +40,11 @@ class popup_insertPasta : AppCompatActivity() {
         }
 
 
-        val editTitulo = intent.getStringExtra(TITULO)
+     //   val editTitulo = intent.getStringExtra(TITULO)
 
-        findViewById<EditText>(R.id.email).setText(editTitulo)
+      //  findViewById<EditText>(R.id.email).setText(editTitulo)
+
+
 
     }
 
