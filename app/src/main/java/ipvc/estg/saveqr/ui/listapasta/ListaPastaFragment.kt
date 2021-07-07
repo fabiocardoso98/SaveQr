@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -17,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ipvc.estg.saveqr.R
@@ -24,7 +24,7 @@ import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.api.endpoints.foldersEndpoint
 import ipvc.estg.saveqr.api.api.models.Folders
 import ipvc.estg.saveqr.api.api.models.FoldersReturn
-import kotlinx.android.synthetic.main.fragment_listapasta.*
+import ipvc.estg.saveqr.ui.Swipes.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.fragment_listapasta.view.*
 import kotlinx.android.synthetic.main.popup_addpasta.view.*
 import retrofit2.Call
@@ -145,6 +145,44 @@ class ListaPastaFragment : Fragment() {
                 }
                 )}
             }
+
+
+        val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position: Int = viewHolder.adapterPosition
+                val id: Int = allReportsLiveData.value?.get(position)?.id ?: 0
+
+                //dinamico ID ID
+               // val callDelete = request.deleteReport(id)
+
+             /*   callDelete?.enqueue(object  : Callback<result> {
+                    override fun onResponse(call: Call<result>, response: Response<result>) {
+
+                        if(response.isSuccessful) {
+
+                            allReportsLiveData.value = allReportsLiveData.value!!.toMutableList().apply {
+                                removeAt(position)
+                            }.toList()
+
+
+                            Toast.makeText(requireContext(), response.body()!!.message, Toast.LENGTH_LONG).show()
+                        }else{
+                            Toast.makeText(requireContext(), response.body()!!.message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<result>, t: Throwable) {
+                        Log.d("REPORTS TESTS", t.message.toString())
+                    }
+                })*/
+            }
+        }
+
+
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
+
 
         return root
         }
