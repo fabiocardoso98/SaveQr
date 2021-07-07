@@ -11,7 +11,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 
 import ipvc.estg.saveqr.R
-import ipvc.estg.saveqr.ui.listaqr.ListaQRViewModel
 
 class DetalhesQR : Fragment() {
 

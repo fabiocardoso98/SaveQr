@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/cardview"
     android:layout_margin="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,7 +13,14 @@
         android:background="@drawable/container_card"
         android:padding="5dp">
 
-
+        <RelativeLayout
+            android:id="@+id/editar"
+            android:layout_width="275dp"
+            android:layout_height="100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/add"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <ImageView
             android:id="@+id/add"
             android:layout_width="40dp"
@@ -30,8 +38,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_send"
-            android:visibility="invisible"
             android:textColor="@android:color/background_dark"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/add"
             app:layout_constraintHorizontal_bias="0.0"

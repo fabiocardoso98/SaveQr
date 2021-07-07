@@ -1,7 +1,7 @@
 package ipvc.estg.saveqr.api.api.models
 
 
-import ipvc.estg.saveqr.api.models.Qrcodes
+import ipvc.estg.saveqr.api.api.models.Folders
 import java.util.*
 
 data class Folders(

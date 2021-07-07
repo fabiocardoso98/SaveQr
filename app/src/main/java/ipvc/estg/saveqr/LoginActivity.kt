@@ -119,6 +119,9 @@ class LoginActivity : AppCompatActivity() {
 
 
                         }
+                        else{
+                            Toast.makeText(this@LoginActivity, "Wrong fields!", Toast.LENGTH_SHORT).show()
+                        }
                     }
 
                     override fun onFailure(call: Call<UsersRegisterReturn>, t: Throwable) {

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AndroidStudioProjects.SaveQr.iml" filepath="$PROJECT_DIR$/.idea/modules/AndroidStudioProjects.SaveQr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SaveQr.iml" filepath="$PROJECT_DIR$/.idea/modules/SaveQr.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SaveQr.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SaveQr.app.iml" />
     </modules>
   </component>

@@ -8,7 +8,9 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.DecelerateInterpolator
+import android.widget.EditText
 import androidx.core.graphics.ColorUtils
+import ipvc.estg.saveqr.ui.listapasta.TITULO
 import kotlinx.android.synthetic.main.fragment_listapasta.*
 import kotlinx.android.synthetic.main.listapasta_item.*
 import kotlinx.android.synthetic.main.popup_addpasta.*
@@ -38,6 +40,10 @@ class popup_insertPasta : AppCompatActivity() {
         }
 
 
+        val editTitulo = intent.getStringExtra(TITULO)
+
+        findViewById<EditText>(R.id.email).setText(editTitulo)
+
     }
 
     override fun onBackPressed() {
@@ -66,5 +72,7 @@ class popup_insertPasta : AppCompatActivity() {
         })
         colorAnimation.start()
     }
+
+
 
 }
