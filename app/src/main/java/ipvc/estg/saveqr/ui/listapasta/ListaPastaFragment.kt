@@ -151,12 +151,13 @@ class ListaPastaFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position: Int = viewHolder.adapterPosition
                 val id: Int = allReportsLiveData.value?.get(position)?.id ?: 0
+                val iduser: Int = allReportsLiveData.value?.get(position)?.userId ?: 0
 
                 //dinamico ID ID
-               // val callDelete = request.deleteReport(id)
+                val callDelete = request.deleteFolders(id,iduser)
 
-             /*   callDelete?.enqueue(object  : Callback<result> {
-                    override fun onResponse(call: Call<result>, response: Response<result>) {
+                callDelete?.enqueue(object  : Callback<Folders> {
+                    override fun onResponse(call: Call<Folders>, response: Response<Folders>) {
 
                         if(response.isSuccessful) {
 
@@ -165,16 +166,16 @@ class ListaPastaFragment : Fragment() {
                             }.toList()
 
 
-                            Toast.makeText(requireContext(), response.body()!!.message, Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), "Sucesso", Toast.LENGTH_LONG).show()
                         }else{
-                            Toast.makeText(requireContext(), response.body()!!.message, Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), "Sucesso", Toast.LENGTH_LONG).show()
                         }
                     }
 
-                    override fun onFailure(call: Call<result>, t: Throwable) {
-                        Log.d("REPORTS TESTS", t.message.toString())
+                    override fun onFailure(call: Call<Folders>, t: Throwable) {
+                        Log.d("Pasta TESTS", t.message.toString())
                     }
-                })*/
+                })
             }
         }
 
