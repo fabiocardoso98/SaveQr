@@ -4,18 +4,34 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
+import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
 import android.view.animation.DecelerateInterpolator
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.graphics.ColorUtils
+import ipvc.estg.saveqr.api.ServiceBuilder
+import ipvc.estg.saveqr.api.api.endpoints.foldersEndpoint
+import ipvc.estg.saveqr.api.api.models.Folders
+import ipvc.estg.saveqr.api.api.models.FoldersReturn
 import ipvc.estg.saveqr.ui.listapasta.TITULO
 import kotlinx.android.synthetic.main.fragment_listapasta.*
 import kotlinx.android.synthetic.main.listapasta_item.*
 import kotlinx.android.synthetic.main.popup_addpasta.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class popup_insertPasta : AppCompatActivity() {
+    var idUser: Int = 0
+
+    private lateinit var nomePasta: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         overridePendingTransition(0, 0)
@@ -39,11 +55,52 @@ class popup_insertPasta : AppCompatActivity() {
             onBackPressed()
         }
 
+        val id: Int? = intent.getIntExtra("id",0)
+        val loginShared: SharedPreferences = getSharedPreferences(getString(R.string.sharedLogin), Context.MODE_PRIVATE)
+        idUser = loginShared.getInt(getString(R.string.idLogin), 0)
 
-     //   val editTitulo = intent.getStringExtra(TITULO)
 
-      //  findViewById<EditText>(R.id.email).setText(editTitulo)
+            nomePasta = findViewById(R.id.email)
+            val name: String? = intent.getStringExtra("name").toString()
+            nomePasta.setText(name)
 
+        addpasta.setOnClickListener {
+            updateReport()
+        }
+
+    }
+
+    private fun updateReport() {
+        nomePasta = findViewById(R.id.email)
+
+        val id: Int? = intent.getIntExtra("id", 0)
+
+        if (!TextUtils.isEmpty(nomePasta.text)) {
+            val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
+
+            val call = request.setUpdateFolders(nomePasta.text.toString())
+
+            call.enqueue(object  : Callback<FoldersReturn> {
+                override fun onResponse(call: Call<FoldersReturn>, response: Response<FoldersReturn>) {
+                    if(response.isSuccessful) {
+
+                        Toast.makeText(applicationContext, "Situação atualizada com sucesso", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }else{
+
+                        Toast.makeText(applicationContext, "Erro, tente mais tarde!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<FoldersReturn>, t: Throwable) {
+                    Log.d("INTERNET LOGIN", t.toString())
+                    Toast.makeText(applicationContext, "Erro, tente mais tarde!!", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        } else {
+            Toast.makeText(applicationContext, "Campos vazios", Toast.LENGTH_LONG).show()
+        }
 
 
     }

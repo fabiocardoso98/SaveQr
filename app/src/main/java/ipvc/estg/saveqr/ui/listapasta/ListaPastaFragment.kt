@@ -1,13 +1,14 @@
 package ipvc.estg.saveqr.ui.listapasta
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -28,7 +29,6 @@ import ipvc.estg.saveqr.api.api.endpoints.foldersEndpoint
 import ipvc.estg.saveqr.api.api.models.Folders
 import ipvc.estg.saveqr.api.api.models.FoldersReturn
 import ipvc.estg.saveqr.popup_insertPasta
-import kotlinx.android.synthetic.main.fragment_listapasta.*
 import kotlinx.android.synthetic.main.fragment_listapasta.view.*
 import kotlinx.android.synthetic.main.popup_addpasta.view.*
 import retrofit2.Call
@@ -58,7 +58,9 @@ class ListaPastaFragment : Fragment() {
 
         })
 
+
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
+
 
         val adapter = PastaAdapter()
         recyclerView.adapter = adapter
@@ -66,7 +68,7 @@ class ListaPastaFragment : Fragment() {
 
         val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
         val call = request.getFolders()
-        val allReportsLiveData = MutableLiveData<List<Folders?>>()
+        val allPastasLiveData = MutableLiveData<List<Folders?>>()
 
         call.enqueue(object  : Callback<FoldersReturn> {
             override fun onResponse(call: Call<FoldersReturn>, response: Response<FoldersReturn>) {
@@ -80,10 +82,10 @@ class ListaPastaFragment : Fragment() {
 
                     var allReports: List<Folders?> = arrAllReports.asList()
 
-                    allReportsLiveData.value = allReports
+                    allPastasLiveData.value = allReports
 
 
-                    allReportsLiveData.observe(requireActivity()) { reports ->
+                    allPastasLiveData.observe(requireActivity()) { reports ->
                         reports.let { adapter.submitList(it) }
                     }
 
@@ -150,15 +152,32 @@ class ListaPastaFragment : Fragment() {
                 )}
             }
 
+        adapter.setOnItemClick(object : PastaAdapter.onItemClick {
+            override fun onViewClick(position: Int) {
+                Log.d("Pastas", "CLICAR CLICAR")
+                val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
+
+
+            }
+
+        })
+
         val swipeHandlerEdit = object : SwipeToEditCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position: Int = viewHolder.adapterPosition
-                val id: Int = allReportsLiveData.value?.get(position)?.id ?: 0
-                val pastaTemp: Folders? = allReportsLiveData.value!![position]
+                val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
+                val pastaTemp: Folders? = allPastasLiveData.value!![position]
 
                 val intent = Intent(requireContext(), popup_insertPasta::class.java)
                 intent.putExtra("id", pastaTemp!!.id)
                 intent.putExtra("name", pastaTemp!!.nome)
+                intent.putExtra("img", pastaTemp!!.img)
+                intent.putExtra("cor", pastaTemp!!.cor)
+                intent.putExtra("part", pastaTemp!!.partilhado)
+                intent.putExtra("dateAdd", pastaTemp!!.dataAdicionado)
+                intent.putExtra("dateUpd", pastaTemp!!.dataAtualizado)
+                intent.putExtra("catId", pastaTemp!!.categoryId)
+                intent.putExtra("userId", pastaTemp!!.userId)
                 startActivity(intent)
             }
         }
@@ -167,7 +186,12 @@ class ListaPastaFragment : Fragment() {
         itemTouchHelperEdit.attachToRecyclerView(recyclerView)
 
         return root
-        }
+
+
+
+
+
+    }
 
     }
 
