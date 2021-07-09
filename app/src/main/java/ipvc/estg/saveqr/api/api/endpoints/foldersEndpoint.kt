@@ -19,7 +19,7 @@ interface foldersEndpoint {
         @Field("userId") userId: Int?
 
     ): Call<Folders>
-
+//done
     @DELETE("/folders/{id}/{userId}")
     fun deleteFolders(@Path("id") id: Int, @Path("userId") userId: Int): Call<Folders>
 
