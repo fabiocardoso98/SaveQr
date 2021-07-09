@@ -168,12 +168,12 @@ class ListaPastaFragment : Fragment() {
 
                             Toast.makeText(requireContext(), "Sucesso", Toast.LENGTH_LONG).show()
                         }else{
-                            Toast.makeText(requireContext(), "Sucesso", Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), "Erro", Toast.LENGTH_LONG).show()
                         }
                     }
 
                     override fun onFailure(call: Call<Folders>, t: Throwable) {
-                        Log.d("Pasta TESTS", t.message.toString())
+                        Toast.makeText(requireContext(), "Erro", Toast.LENGTH_LONG).show()
                     }
                 })
             }
