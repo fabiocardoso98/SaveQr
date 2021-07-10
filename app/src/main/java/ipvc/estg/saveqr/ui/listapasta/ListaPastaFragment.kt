@@ -41,7 +41,7 @@ import java.time.format.DateTimeFormatter
 class ListaPastaFragment : Fragment() {
 
     private lateinit var listaPastaViewModel: ListaPastaViewModel
-    var idUser: Any? = null;
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
 
@@ -58,7 +58,10 @@ class ListaPastaFragment : Fragment() {
 
         })
 
-
+        val loginShared: SharedPreferences? =
+            activity?.getSharedPreferences(getString(R.string.login_p), Context.MODE_PRIVATE)
+        val idUser = loginShared?.getInt(getString(R.string.idLogin), 0)
+        if (idUser != null) {
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
 
 
@@ -67,130 +70,175 @@ class ListaPastaFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
-        val call = request.getFolders()
-        val allPastasLiveData = MutableLiveData<List<Folders?>>()
 
-        call.enqueue(object  : Callback<FoldersReturn> {
-            override fun onResponse(call: Call<FoldersReturn>, response: Response<FoldersReturn>) {
+            // allowed if nullableInt could not have changed since the null check
+            val idUser: Int = idUser
+            val call = request.getPastaByUser(idUser)
 
-                if(response.isSuccessful) {
-                    var arrAllReports: Array<Folders?> = arrayOfNulls<Folders>(response.body()!!.data.size)
+            val allPastasLiveData = MutableLiveData<List<Folders?>>()
 
-                    for ((index, item) in response.body()!!.data.withIndex()) {
-                        arrAllReports[index] = item
+            call.enqueue(object : Callback<FoldersReturn> {
+                override fun onResponse(
+                    call: Call<FoldersReturn>,
+                    response: Response<FoldersReturn>
+                ) {
+
+                    if (response.isSuccessful) {
+                        var arrAllReports: Array<Folders?> =
+                            arrayOfNulls<Folders>(response.body()!!.data.size)
+
+                        for ((index, item) in response.body()!!.data.withIndex()) {
+                            arrAllReports[index] = item
+                        }
+
+                        var allReports: List<Folders?> = arrAllReports.asList()
+
+                        allPastasLiveData.value = allReports
+
+
+                        allPastasLiveData.observe(requireActivity()) { reports ->
+                            reports.let { adapter.submitList(it) }
+                        }
+
+                    } else {
+
                     }
-
-                    var allReports: List<Folders?> = arrAllReports.asList()
-
-                    allPastasLiveData.value = allReports
-
-
-                    allPastasLiveData.observe(requireActivity()) { reports ->
-                        reports.let { adapter.submitList(it) }
-                    }
-
-                }else{
-
                 }
-            }
 
-            override fun onFailure(call: Call<FoldersReturn>, t: Throwable) {
-                Toast.makeText( activity, "DEU ERRO", Toast.LENGTH_LONG).show()
-            }
-        })
+                override fun onFailure(call: Call<FoldersReturn>, t: Throwable) {
+                    Toast.makeText(activity, "DEU ERRO", Toast.LENGTH_LONG).show()
+                }
+            })
 
-        textView4.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_listaQrFragment, null))
-        val loginShared: SharedPreferences? =
-            activity?.getSharedPreferences(getString(R.string.login_p), Context.MODE_PRIVATE)
-        val idUser = loginShared?.getInt(getString(R.string.idLogin), 0)
-        root.add.setOnClickListener {
-
-            val mDialogView = LayoutInflater.from(requireActivity()).inflate(R.layout.popup_addpasta, null)
-            val mBuilder = AlertDialog.Builder(requireActivity()).setView(mDialogView)
-            val mAlertDialog = mBuilder.show()
-
-            mDialogView.addpasta.setOnClickListener {
-                val formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss")      //data
-                val usersDesiredTimeZone: ZoneId = ZoneId.of("Europe/Lisbon")           //fuso Horario
-                val now: ZonedDateTime = ZonedDateTime.now(usersDesiredTimeZone)
-                val text: String = now.format(formatter)
-                val nomepasta = mDialogView.email.text.toString()
-
-                val pasta = mDialogView.email.text.toString()
-                Toast.makeText(activity, "Sucesso! - "+pasta, Toast.LENGTH_SHORT).show();
-                mAlertDialog.dismiss()
-                val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
-                val call = request.postFolders(
-                    nomepasta,
-                    text,
-                    idUser as Int?
+            textView4.setOnClickListener(
+                Navigation.createNavigateOnClickListener(
+                    R.id.nav_listaQrFragment,
+                    null
                 )
-                call.enqueue(object : Callback<Folders> {
-                    override fun onResponse(
-                        call: Call<Folders>,
-                        response: Response<Folders>
-                    ) {
+            )
+
+            root.add.setOnClickListener {
+
+                val mDialogView =
+                    LayoutInflater.from(requireActivity()).inflate(R.layout.popup_addpasta, null)
+                val mBuilder = AlertDialog.Builder(requireActivity()).setView(mDialogView)
+                val mAlertDialog = mBuilder.show()
+
+                mDialogView.addpasta.setOnClickListener {
+                    val formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss")      //data
+                    val usersDesiredTimeZone: ZoneId =
+                        ZoneId.of("Europe/Lisbon")           //fuso Horario
+                    val now: ZonedDateTime = ZonedDateTime.now(usersDesiredTimeZone)
+                    val text: String = now.format(formatter)
+                    val nomepasta = mDialogView.email.text.toString()
+
+                    val pasta = mDialogView.email.text.toString()
+                    Toast.makeText(activity, "Sucesso! - " + pasta, Toast.LENGTH_SHORT).show();
+                    mAlertDialog.dismiss()
+                    val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
+                    val call = request.postFolders(
+                        nomepasta,
+                        text,
+                        idUser as Int?
+                    )
+                    call.enqueue(object : Callback<Folders> {
+                        override fun onResponse(
+                            call: Call<Folders>,
+                            response: Response<Folders>
+                        ) {
 
 
-                        if (response.isSuccessful) {
-                            Log.d("***", "Sucesso")
+                            if (response.isSuccessful) {
+                                val call = request.getPastaByUser(idUser)
+                                call.enqueue(object : Callback<FoldersReturn> {
+                                    override fun onResponse(
+                                        call: Call<FoldersReturn>,
+                                        response: Response<FoldersReturn>
+                                    ) {
 
-                            // communicator.passDataconn(root.nome.text.toString())
-                            //  communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
-                            // getActivity()?.getSupportFragmentManager()?.beginTransaction().remove(this@RegistarFragment).commit();
+                                        if (response.isSuccessful) {
+                                            var arrAllReports: Array<Folders?> =
+                                                arrayOfNulls<Folders>(response.body()!!.data.size)
+
+                                            for ((index, item) in response.body()!!.data.withIndex()) {
+                                                arrAllReports[index] = item
+                                            }
+
+                                            var allReports: List<Folders?> = arrAllReports.asList()
+
+                                            allPastasLiveData.value = allReports
 
 
-                        } else {
-                            Log.d("***", "Falhou")
+                                            allPastasLiveData.observe(requireActivity()) { reports ->
+                                                reports.let { adapter.submitList(it) }
+                                            }
+
+                                        } else {
+
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<FoldersReturn>, t: Throwable) {
+                                        Toast.makeText(activity, "DEU ERRO", Toast.LENGTH_LONG).show()
+                                    }
+                                })
+                                // communicator.passDataconn(root.nome.text.toString())
+                                //  communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
+                                // getActivity()?.getSupportFragmentManager()?.beginTransaction().remove(this@RegistarFragment).commit();
+
+
+                            } else {
+                                Log.d("***", "Falhou")
+
+                            }
 
                         }
 
-                    }
+                        override fun onFailure(call: Call<Folders>, t: Throwable) {
+                            TODO("Not yet implemented")
+                        }
 
-                    override fun onFailure(call: Call<Folders>, t: Throwable) {
-                        TODO("Not yet implemented")
                     }
+                    )
+                }
+            }
+
+            adapter.setOnItemClick(object : PastaAdapter.onItemClick {
+                override fun onViewClick(position: Int) {
+                    Log.d("Pastas", "CLICAR CLICAR")
+                    val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
+
 
                 }
-                )}
+
+            })
+
+            val swipeHandlerEdit = object : SwipeToEditCallback(requireContext()) {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val position: Int = viewHolder.adapterPosition
+                    val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
+                    val pastaTemp: Folders? = allPastasLiveData.value!![position]
+
+                    val intent = Intent(requireContext(), popup_insertPasta::class.java)
+                    intent.putExtra("id", pastaTemp!!.id)
+                    intent.putExtra("name", pastaTemp!!.nome)
+                    intent.putExtra("img", pastaTemp!!.img)
+                    intent.putExtra("cor", pastaTemp!!.cor)
+                    intent.putExtra("part", pastaTemp!!.partilhado)
+                    intent.putExtra("dateAdd", pastaTemp!!.dataAdicionado)
+                    intent.putExtra("dateUpd", pastaTemp!!.dataAtualizado)
+                    intent.putExtra("catId", pastaTemp!!.categoryId)
+                    intent.putExtra("userId", pastaTemp!!.userId)
+                    startActivity(intent)
+                }
             }
 
-        adapter.setOnItemClick(object : PastaAdapter.onItemClick {
-            override fun onViewClick(position: Int) {
-                Log.d("Pastas", "CLICAR CLICAR")
-                val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
 
+            val itemTouchHelperEdit = ItemTouchHelper(swipeHandlerEdit)
+            itemTouchHelperEdit.attachToRecyclerView(recyclerView)
 
-            }
-
-        })
-
-        val swipeHandlerEdit = object : SwipeToEditCallback(requireContext()) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position: Int = viewHolder.adapterPosition
-                val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
-                val pastaTemp: Folders? = allPastasLiveData.value!![position]
-
-                val intent = Intent(requireContext(), popup_insertPasta::class.java)
-                intent.putExtra("id", pastaTemp!!.id)
-                intent.putExtra("name", pastaTemp!!.nome)
-                intent.putExtra("img", pastaTemp!!.img)
-                intent.putExtra("cor", pastaTemp!!.cor)
-                intent.putExtra("part", pastaTemp!!.partilhado)
-                intent.putExtra("dateAdd", pastaTemp!!.dataAdicionado)
-                intent.putExtra("dateUpd", pastaTemp!!.dataAtualizado)
-                intent.putExtra("catId", pastaTemp!!.categoryId)
-                intent.putExtra("userId", pastaTemp!!.userId)
-                startActivity(intent)
-            }
         }
-
-        val itemTouchHelperEdit = ItemTouchHelper(swipeHandlerEdit)
-        itemTouchHelperEdit.attachToRecyclerView(recyclerView)
-
-        return root
-
-
+            return root
 
 
 
