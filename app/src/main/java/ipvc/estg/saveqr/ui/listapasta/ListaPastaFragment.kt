@@ -100,6 +100,9 @@ class ListaPastaFragment : Fragment() {
         })
 
         textView4.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_listaQrFragment, null))
+        val loginShared: SharedPreferences? =
+            activity?.getSharedPreferences(getString(R.string.login_p), Context.MODE_PRIVATE)
+        val idUser = loginShared?.getInt(getString(R.string.idLogin), 0)
         root.add.setOnClickListener {
 
             val mDialogView = LayoutInflater.from(requireActivity()).inflate(R.layout.popup_addpasta, null)

@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SaveQr.iml" filepath="$PROJECT_DIR$/.idea/modules/SaveQr.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SaveQr.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SaveQr.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Utilizador-SaveQr.iml" filepath="$PROJECT_DIR$/.idea/modules/Utilizador-SaveQr.iml" group="SaveQr" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="SaveQr/app" />
     </modules>
   </component>
 </project>
