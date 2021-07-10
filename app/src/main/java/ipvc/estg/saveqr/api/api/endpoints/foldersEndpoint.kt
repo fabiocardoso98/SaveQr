@@ -2,7 +2,6 @@ package ipvc.estg.saveqr.api.api.endpoints
 
 import ipvc.estg.saveqr.api.api.models.Folders
 import ipvc.estg.saveqr.api.api.models.FoldersReturn
-import ipvc.estg.saveqr.api.models.UsersReturn
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -21,7 +20,10 @@ interface foldersEndpoint {
     ): Call<Folders>
 
     @FormUrlEncoded
-    @PUT("reports/{id}")
+    @PUT("folders/{id}")
     fun setUpdateFolders(@Field( "nome") nome: String): Call<FoldersReturn>
+
+    @GET("/folders/users/{userId}")
+    fun getPastaByUser(@Path("userId") userId: Int): Call<FoldersReturn>
 
 }

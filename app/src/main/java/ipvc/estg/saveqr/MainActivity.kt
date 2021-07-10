@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         val frag = intent.getStringExtra("EXTRA")
         if (frag == "Listar") {
-            navController.navigate(R.id.nav_listapasta);
+            navController.navigate(R.id.nav_listapasta)
         }
 
 
