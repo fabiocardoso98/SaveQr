@@ -31,7 +31,11 @@ import ipvc.estg.saveqr.api.api.endpoints.foldersEndpoint
 import ipvc.estg.saveqr.api.api.models.Folders
 import ipvc.estg.saveqr.api.api.models.FoldersReturn
 import ipvc.estg.saveqr.popup_insertPasta
+import ipvc.estg.saveqr.ui.listaqr.ListaQrFragment
+import kotlinx.android.synthetic.main.fragment_listapasta.*
 import kotlinx.android.synthetic.main.fragment_listapasta.view.*
+import kotlinx.android.synthetic.main.fragment_listapasta.view.add
+import kotlinx.android.synthetic.main.listapasta_item.view.*
 import kotlinx.android.synthetic.main.popup_addpasta.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -292,6 +296,24 @@ class ListaPastaFragment : Fragment() {
             itemTouchHelperEdit.attachToRecyclerView(recyclerView)
 
         }
+
+       /* root.add.setOnClickListener {
+                var position : Int = 0
+                val pastaTemp: Folders? = allPastasLiveData.value!![position]
+                position = allPastasLiveData.value?.get(position)?.id?:0
+                val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
+                val iduser: Int = allPastasLiveData.value?.get(position)?.userId ?: 0
+                val intent = Intent(requireContext(), popup_insertPasta::class.java)
+                intent.putExtra("id", pastaTemp!!.id)
+                startActivity(intent)
+            }*/
+
+        root.add.setOnClickListener {
+            passIDpasta(recyclerView)
+    }
+
+
+
         return root
 
 
@@ -300,6 +322,19 @@ class ListaPastaFragment : Fragment() {
     override fun onResume() {
         listarpasta()
         super.onResume()
+
+
+    }
+
+    fun passIDpasta(viewHolder: RecyclerView) {
+        val position: Int = adapterPosition
+        val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
+        val pastaTemp: Folders? = allPastasLiveData.value!![position]
+
+        val intent = Intent(requireContext(), ListaQrFragment::class.java)
+        intent.putExtra("id", pastaTemp!!.id)
+        intent.putExtra("userId", pastaTemp!!.userId)
+        startActivity(intent)
     }
 
     fun listarpasta() {

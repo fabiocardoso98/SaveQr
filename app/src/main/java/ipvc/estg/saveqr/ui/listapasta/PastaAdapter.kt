@@ -50,11 +50,15 @@ class PastaAdapter: ListAdapter<Folders, PastaAdapter.PastasViewHolder>(PastaCom
 
     }
 
+
+
     class PastasViewHolder(itemView: View, onItemClick: onItemClick?) : RecyclerView.ViewHolder(itemView) {
         val pastaTitulo: TextView = itemView.findViewById(R.id.titulo)
         val pastaData: TextView = itemView.findViewById(R.id.date2)
         val pastaAdd: ImageView = itemView.findViewById(R.id.add)
         val pastaEdit: RelativeLayout = itemView.findViewById(R.id.editar)
+
+
 
 
         fun bind(titulo: String?,data: Date?) {
@@ -79,6 +83,9 @@ class PastaAdapter: ListAdapter<Folders, PastaAdapter.PastasViewHolder>(PastaCom
                 return PastasViewHolder(view,onItemClickListener)
             }
         }
+
+
+
     }
 
         class PastaComparator : DiffUtil.ItemCallback<Folders>() {
