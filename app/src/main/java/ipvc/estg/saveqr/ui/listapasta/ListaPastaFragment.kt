@@ -97,77 +97,82 @@ class ListaPastaFragment : Fragment() {
                     val nomepasta = mDialogView.email.text.toString()
 
                     val pasta = mDialogView.email.text.toString()
-                    Toast.makeText(activity, "Sucesso! - " + pasta, Toast.LENGTH_SHORT).show();
-                    mAlertDialog.dismiss()
-                    val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
-                    val call = request.postFolders(
-                        nomepasta,
-                        text,
-                        idUser as Int?
-                    )
-                    call.enqueue(object : Callback<Folders> {
-                        override fun onResponse(
-                            call: Call<Folders>,
-                            response: Response<Folders>
-                        ) {
+                    if (!pasta.isNullOrEmpty()) {
+                        Toast.makeText(activity, "Sucesso! - " + pasta, Toast.LENGTH_SHORT).show();
+                        mAlertDialog.dismiss()
+                        val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
+                        val call = request.postFolders(
+                            nomepasta,
+                            text,
+                            idUser as Int?
+                        )
+                        call.enqueue(object : Callback<Folders> {
+                            override fun onResponse(
+                                call: Call<Folders>,
+                                response: Response<Folders>
+                            ) {
 
 
-                            if (response.isSuccessful) {
-                                val call = request.getPastaByUser(idUser)
-                                call.enqueue(object : Callback<FoldersReturn> {
-                                    override fun onResponse(
-                                        call: Call<FoldersReturn>,
-                                        response: Response<FoldersReturn>
-                                    ) {
+                                if (response.isSuccessful) {
+                                    val call = request.getPastaByUser(idUser)
+                                    call.enqueue(object : Callback<FoldersReturn> {
+                                        override fun onResponse(
+                                            call: Call<FoldersReturn>,
+                                            response: Response<FoldersReturn>
+                                        ) {
 
-                                        if (response.isSuccessful) {
-                                            var arrAllReports: Array<Folders?> =
-                                                arrayOfNulls<Folders>(response.body()!!.data.size)
+                                            if (response.isSuccessful) {
+                                                var arrAllReports: Array<Folders?> =
+                                                    arrayOfNulls<Folders>(response.body()!!.data.size)
 
-                                            for ((index, item) in response.body()!!.data.withIndex()) {
-                                                arrAllReports[index] = item
+                                                for ((index, item) in response.body()!!.data.withIndex()) {
+                                                    arrAllReports[index] = item
+                                                }
+
+                                                var allReports: List<Folders?> =
+                                                    arrAllReports.asList()
+
+                                                allPastasLiveData.value = allReports
+
+
+                                                allPastasLiveData.observe(requireActivity()) { reports ->
+                                                    reports.let { adapter.submitList(it) }
+                                                }
+
+                                            } else {
+
                                             }
-
-                                            var allReports: List<Folders?> = arrAllReports.asList()
-
-                                            allPastasLiveData.value = allReports
-
-
-                                            allPastasLiveData.observe(requireActivity()) { reports ->
-                                                reports.let { adapter.submitList(it) }
-                                            }
-
-                                        } else {
-
                                         }
-                                    }
 
-                                    override fun onFailure(
-                                        call: Call<FoldersReturn>,
-                                        t: Throwable
-                                    ) {
-                                        Toast.makeText(activity, "DEU ERRO", Toast.LENGTH_LONG)
-                                            .show()
-                                    }
-                                })
-                                // communicator.passDataconn(root.nome.text.toString())
-                                //  communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
-                                // getActivity()?.getSupportFragmentManager()?.beginTransaction().remove(this@RegistarFragment).commit();
+                                        override fun onFailure(
+                                            call: Call<FoldersReturn>,
+                                            t: Throwable
+                                        ) {
+                                            Toast.makeText(activity, "DEU ERRO", Toast.LENGTH_LONG)
+                                                .show()
+                                        }
+                                    })
+                                    // communicator.passDataconn(root.nome.text.toString())
+                                    //  communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
+                                    // getActivity()?.getSupportFragmentManager()?.beginTransaction().remove(this@RegistarFragment).commit();
 
 
-                            } else {
-                                Log.d("***", "Falhou")
+                                } else {
+                                    Log.d("***", "Falhou")
+
+                                }
 
                             }
 
-                        }
+                            override fun onFailure(call: Call<Folders>, t: Throwable) {
+                                TODO("Not yet implemented")
+                            }
 
-                        override fun onFailure(call: Call<Folders>, t: Throwable) {
-                            TODO("Not yet implemented")
                         }
-
+                        )
+                    }else{
+                        Toast.makeText(activity, "Pasta sem nome", Toast.LENGTH_LONG).show()
                     }
-                    )
                 }
             }
 
@@ -251,20 +256,22 @@ class ListaPastaFragment : Fragment() {
                     val iduser: Int = allPastasLiveData.value?.get(position)?.userId ?: 0
 
                     //dinamico ID ID
-                    val callDelete = request.deleteFolders(id,iduser)
+                    val callDelete = request.deleteFolders(id, iduser)
 
-                    callDelete?.enqueue(object  : Callback<Folders> {
+                    callDelete?.enqueue(object : Callback<Folders> {
                         override fun onResponse(call: Call<Folders>, response: Response<Folders>) {
 
-                            if(response.isSuccessful) {
+                            if (response.isSuccessful) {
 
-                                allPastasLiveData.value = allPastasLiveData.value!!.toMutableList().apply {
-                                    removeAt(position)
-                                }.toList()
+                                allPastasLiveData.value =
+                                    allPastasLiveData.value!!.toMutableList().apply {
+                                        removeAt(position)
+                                    }.toList()
 
 
-                                Toast.makeText(requireContext(), "Sucesso", Toast.LENGTH_LONG).show()
-                            }else{
+                                Toast.makeText(requireContext(), "Sucesso", Toast.LENGTH_LONG)
+                                    .show()
+                            } else {
                                 Toast.makeText(requireContext(), "Erro", Toast.LENGTH_LONG).show()
                             }
                         }
@@ -281,7 +288,6 @@ class ListaPastaFragment : Fragment() {
             itemTouchHelper.attachToRecyclerView(recyclerView)
 
 
-
             val itemTouchHelperEdit = ItemTouchHelper(swipeHandlerEdit)
             itemTouchHelperEdit.attachToRecyclerView(recyclerView)
 
@@ -295,8 +301,8 @@ class ListaPastaFragment : Fragment() {
         listarpasta()
         super.onResume()
     }
-    fun listarpasta()
-    {
+
+    fun listarpasta() {
         val call = request.getPastaByUser(idUser)
 
 
