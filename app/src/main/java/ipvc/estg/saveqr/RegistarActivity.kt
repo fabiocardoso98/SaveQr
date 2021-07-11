@@ -7,9 +7,6 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import ipvc.estg.saveqr.api.ServiceBuilder
-import ipvc.estg.saveqr.api.endpoints.usersEndpoint
-import ipvc.estg.saveqr.api.models.Users
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -61,46 +58,6 @@ class RegistarActivity : AppCompatActivity() {
             } else if (txt_pwd.text.toString() != txt_confirm_pwd.text.toString()) {
                 txt_confirm_pwd.error = "Don't match"
                 txt_pwd.error = "Don't match"
-            } else {
-                val intent = Intent(this@RegistarActivity, LoginActivity::class.java)
-                val request = ServiceBuilder.buildService(usersEndpoint::class.java)
-                val call = request.postUser(
-                    txt_name.text.toString(),
-                    txt_username.text.toString(),
-                    txt_email.text.toString(),
-                    txt_pwd.text.toString()
-
-                )
-                call.enqueue(object : Callback<Users> {
-                    override fun onResponse(
-                        call: Call<Users>,
-                        response: Response<Users>
-                    ) {
-
-
-                        if (response.isSuccessful) {
-                            // Log.d("***","Sucesso")
-                            Toast.makeText(this@RegistarActivity, "Sucesso!", Toast.LENGTH_SHORT)
-                                .show();
-                            startActivity(intent)
-                            finish()
-                            // communicator.passDataconn(root.nome.text.toString())
-                            //  communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
-                            // getActivity()?.getSupportFragmentManager()?.beginTransaction().remove(this@RegistarFragment).commit();
-
-
-                        } else {
-                            Log.d("***", "Falhou")
-
-                        }
-
-                    }
-
-                    override fun onFailure(call: Call<Users>, t: Throwable) {
-
-                    }
-
-                })
             }
 
         }
