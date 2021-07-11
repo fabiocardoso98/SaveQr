@@ -6,13 +6,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ServiceBuilder {
     private val client = OkHttpClient.Builder().build()
-
+    //merge
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://apisaveqrcode.herokuapp.com")
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()
-
+    //Adsas
     fun<T> buildService(service: Class<T>): T {
         return retrofit.create(service)
     }

@@ -1,4 +1,4 @@
-package ipvc.estg.saveqr.api.endpoints
+package ipvc.estg.saveqr.api.api.endpoints
 
 import ipvc.estg.saveqr.api.models.QrCodesRegisterReturn
 import ipvc.estg.saveqr.api.models.QrCodesReturn

@@ -2,7 +2,6 @@ package ipvc.estg.saveqr.ui.listaqr
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,10 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ipvc.estg.saveqr.R
 import ipvc.estg.saveqr.api.ServiceBuilder
-import ipvc.estg.saveqr.api.models.QrCodesRegisterReturn
+import ipvc.estg.saveqr.api.api.endpoints.QrCodesEndpoint
 import ipvc.estg.saveqr.api.models.QrCodesReturn
 import ipvc.estg.saveqr.api.models.Qrcodes
-import ipvc.estg.saveqr.ui.listapasta.ListaPastaViewModel
 import ipvc.estg.saveqr.ui.listaqr.adapter.QrAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -55,7 +53,7 @@ class ListaQrFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val request = ServiceBuilder.buildService(ipvc.estg.saveqr.api.endpoints.QrCodesEndpoint::class.java)
+        val request = ServiceBuilder.buildService(QrCodesEndpoint::class.java)
        // val call = request.getQrCodeByUser(35)
         val call = request.getQrcodes()
         val allReportsLiveData = MutableLiveData<List<Qrcodes?>>()
