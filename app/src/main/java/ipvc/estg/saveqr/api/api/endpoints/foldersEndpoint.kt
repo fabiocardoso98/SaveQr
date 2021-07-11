@@ -21,7 +21,7 @@ interface foldersEndpoint {
 
     @FormUrlEncoded
     @PUT("folders/{id}")
-    fun setUpdateFolders(@Field( "nome") nome: String): Call<FoldersReturn>
+    fun setUpdateFolders(@Path("id") id: Int, @Field( "nome") nome: String): Call<FoldersReturn>
 
     @GET("/folders/users/{userId}")
     fun getPastaByUser(@Path("userId") userId: Int): Call<FoldersReturn>

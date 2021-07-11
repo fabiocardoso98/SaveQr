@@ -75,26 +75,24 @@ class popup_insertPasta : AppCompatActivity() {
 
         val id: Int? = intent.getIntExtra("id", 0)
 
+
         if (!TextUtils.isEmpty(nomePasta.text)) {
             val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
 
-            val call = request.setUpdateFolders(nomePasta.text.toString())
+            val call = request.setUpdateFolders(id!!,nomePasta.text.toString())
 
             call.enqueue(object  : Callback<FoldersReturn> {
                 override fun onResponse(call: Call<FoldersReturn>, response: Response<FoldersReturn>) {
                     if(response.isSuccessful) {
 
-                        Toast.makeText(applicationContext, "Situação atualizada com sucesso", Toast.LENGTH_SHORT).show()
                         finish()
-                    }else{
 
-                        Toast.makeText(applicationContext, "Erro, tente mais tarde!", Toast.LENGTH_SHORT).show()
+
                     }
                 }
 
                 override fun onFailure(call: Call<FoldersReturn>, t: Throwable) {
-                    Log.d("INTERNET LOGIN", t.toString())
-                    Toast.makeText(applicationContext, "Erro, tente mais tarde!!", Toast.LENGTH_SHORT).show()
+                    finish()
                 }
             })
 

@@ -62,12 +62,13 @@ class LoginActivity : AppCompatActivity() {
         )
         val idLogin = loginShared.getInt(getString(R.string.idLogin), 0)
         val userLogin = loginShared.getString(getString(R.string.userLogin), "")
-        val status = loginShared.getBoolean(getString(R.string.status),true)
+        val status = loginShared.getBoolean(getString(R.string.status), true)
 
         if ((!userLogin.equals("")) && (idLogin != 0) && status) {
             val intent = Intent(this@LoginActivity, MainActivity::class.java)
             startActivity(intent)
         }
+
 
 
 
@@ -157,16 +158,14 @@ class LoginActivity : AppCompatActivity() {
             val account = completedTask.getResult(ApiException::class.java)
 
             // Signed in successfully, show authenticated UI.
-        // updateUI(account)
+            // updateUI(account)
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-          //  Log.w(TAG, "signInResult:failed code=" + e.statusCode)
-        //    updateUI(null)
+            //  Log.w(TAG, "signInResult:failed code=" + e.statusCode)
+            //    updateUI(null)
         }
     }
-
-
 
 
 

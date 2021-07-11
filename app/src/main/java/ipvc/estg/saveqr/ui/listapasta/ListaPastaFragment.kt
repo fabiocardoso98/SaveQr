@@ -49,12 +49,12 @@ class ListaPastaFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-       listaPastaViewModel =
-                ViewModelProviders.of(this).get(ListaPastaViewModel::class.java)
+        listaPastaViewModel =
+            ViewModelProviders.of(this).get(ListaPastaViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_listapasta, container, false)
         val textView4: TextView = root.findViewById(R.id.textView4)
         listaPastaViewModel.text.observe(viewLifecycleOwner, Observer {
-       //     textView.text = it
+            //     textView.text = it
 
         })
 
@@ -62,14 +62,14 @@ class ListaPastaFragment : Fragment() {
             activity?.getSharedPreferences(getString(R.string.login_p), Context.MODE_PRIVATE)
         val idUser = loginShared?.getInt(getString(R.string.idLogin), 0)
         if (idUser != null) {
-        val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
+            val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
 
 
-        val adapter = PastaAdapter()
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            val adapter = PastaAdapter()
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
+            val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
 
             // allowed if nullableInt could not have changed since the null check
             val idUser: Int = idUser
@@ -178,8 +178,12 @@ class ListaPastaFragment : Fragment() {
                                         }
                                     }
 
-                                    override fun onFailure(call: Call<FoldersReturn>, t: Throwable) {
-                                        Toast.makeText(activity, "DEU ERRO", Toast.LENGTH_LONG).show()
+                                    override fun onFailure(
+                                        call: Call<FoldersReturn>,
+                                        t: Throwable
+                                    ) {
+                                        Toast.makeText(activity, "DEU ERRO", Toast.LENGTH_LONG)
+                                            .show()
                                     }
                                 })
                                 // communicator.passDataconn(root.nome.text.toString())
@@ -230,6 +234,49 @@ class ListaPastaFragment : Fragment() {
                     intent.putExtra("catId", pastaTemp!!.categoryId)
                     intent.putExtra("userId", pastaTemp!!.userId)
                     startActivity(intent)
+                    allPastasLiveData.value = allPastasLiveData.value!!.toMutableList().apply {
+                        removeAt(position)
+
+                        val call = request.getPastaByUser(idUser)
+                        call.enqueue(object : Callback<FoldersReturn> {
+                            override fun onResponse(
+                                call: Call<FoldersReturn>,
+                                response: Response<FoldersReturn>
+                            ) {
+
+                                if (response.isSuccessful) {
+                                    var arrAllReports: Array<Folders?> =
+                                        arrayOfNulls<Folders>(response.body()!!.data.size)
+
+                                    for ((index, item) in response.body()!!.data.withIndex()) {
+                                        arrAllReports[index] = item
+                                    }
+
+                                    var allReports: List<Folders?> = arrAllReports.asList()
+
+                                    allPastasLiveData.value = allReports
+
+
+                                    allPastasLiveData.observe(requireActivity()) { reports ->
+                                        reports.let { adapter.submitList(it) }
+                                    }
+
+                                } else {
+
+                                }
+                            }
+
+                            override fun onFailure(call: Call<FoldersReturn>, t: Throwable) {
+                                Toast.makeText(activity, "DEU ERRO", Toast.LENGTH_LONG).show()
+                            }
+                        })
+                        // communicator.passDataconn(root.nome.text.toString())
+                        //  communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
+                        // getActivity()?.getSupportFragmentManager()?.beginTransaction().remove(this@RegistarFragment).commit();
+
+
+                    }.toList()
+
                 }
             }
 
@@ -238,11 +285,10 @@ class ListaPastaFragment : Fragment() {
             itemTouchHelperEdit.attachToRecyclerView(recyclerView)
 
         }
-            return root
-
+        return root
 
 
     }
 
-    }
+}
 
