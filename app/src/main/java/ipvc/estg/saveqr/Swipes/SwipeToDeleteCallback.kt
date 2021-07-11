@@ -1,4 +1,4 @@
-package ipvc.estg.saveqr.ui.Swipes
+package ipvc.estg.saveqr.Swipes
 
 import android.content.Context
 import android.graphics.Canvas

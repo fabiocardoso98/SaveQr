@@ -26,4 +26,7 @@ interface foldersEndpoint {
     @GET("/folders/users/{userId}")
     fun getPastaByUser(@Path("userId") userId: Int): Call<FoldersReturn>
 
+    @DELETE("/folders/{id}/{userId}")
+    fun deleteFolders(@Path("id") id: Int, @Path("userId") userId: Int): Call<Folders>
+
 }

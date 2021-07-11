@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ipvc.estg.saveqr.R
+import ipvc.estg.saveqr.Swipes.SwipeToDeleteCallback
 import ipvc.estg.saveqr.Swipes.SwipeToEditCallback
 import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.api.endpoints.foldersEndpoint
@@ -242,6 +243,43 @@ class ListaPastaFragment : Fragment() {
 
                 }
             }
+
+            val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val position: Int = viewHolder.adapterPosition
+                    val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
+                    val iduser: Int = allPastasLiveData.value?.get(position)?.userId ?: 0
+
+                    //dinamico ID ID
+                    val callDelete = request.deleteFolders(id,iduser)
+
+                    callDelete?.enqueue(object  : Callback<Folders> {
+                        override fun onResponse(call: Call<Folders>, response: Response<Folders>) {
+
+                            if(response.isSuccessful) {
+
+                                allPastasLiveData.value = allPastasLiveData.value!!.toMutableList().apply {
+                                    removeAt(position)
+                                }.toList()
+
+
+                                Toast.makeText(requireContext(), "Sucesso", Toast.LENGTH_LONG).show()
+                            }else{
+                                Toast.makeText(requireContext(), "Erro", Toast.LENGTH_LONG).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<Folders>, t: Throwable) {
+                            Toast.makeText(requireContext(), "Erro", Toast.LENGTH_LONG).show()
+                        }
+                    })
+                }
+            }
+
+
+            val itemTouchHelper = ItemTouchHelper(swipeHandler)
+            itemTouchHelper.attachToRecyclerView(recyclerView)
+
 
 
             val itemTouchHelperEdit = ItemTouchHelper(swipeHandlerEdit)
