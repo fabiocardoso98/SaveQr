@@ -11,8 +11,14 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.ListAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ipvc.estg.saveqr.LoginActivity
@@ -20,6 +26,7 @@ import ipvc.estg.saveqr.R
 import ipvc.estg.saveqr.api.api.models.Folders
 import ipvc.estg.saveqr.popup_insertPasta
 import ipvc.estg.saveqr.ui.listapasta.PastaAdapter.PastasViewHolder
+import ipvc.estg.saveqr.ui.listaqr.ListaQrFragment
 import java.util.*
 
 
@@ -32,6 +39,7 @@ class PastaAdapter: ListAdapter<Folders, PastaAdapter.PastasViewHolder>(PastaCom
 
     public fun setOnItemClick(newOnItemClickListener: PastaAdapter.onItemClick) {
         onItemClickListener = newOnItemClickListener
+
     }
 
     interface onItemClick {
@@ -72,6 +80,7 @@ class PastaAdapter: ListAdapter<Folders, PastaAdapter.PastasViewHolder>(PastaCom
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onItemClick?.onViewClick(position)
+
                 }
 
             }

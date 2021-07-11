@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
@@ -20,6 +21,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -182,10 +184,10 @@ class ListaPastaFragment : Fragment() {
 
             adapter.setOnItemClick(object : PastaAdapter.onItemClick {
                 override fun onViewClick(position: Int) {
-                    Log.d("Pastas", "CLICAR CLICAR")
                     val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
-
-
+                    val pastaTemp: Folders? = allPastasLiveData.value!![position]
+                    val bundle = bundleOf("id" to pastaTemp!!.id,"userId" to idUser)
+                    findNavController().navigate(R.id.nav_listaQrFragment,bundle)
                 }
 
             })
@@ -308,9 +310,6 @@ class ListaPastaFragment : Fragment() {
                 startActivity(intent)
             }*/
 
-        root.add.setOnClickListener {
-            passIDpasta(recyclerView)
-    }
 
 
 
@@ -326,16 +325,7 @@ class ListaPastaFragment : Fragment() {
 
     }
 
-    fun passIDpasta(viewHolder: RecyclerView) {
-        val position: Int = adapterPosition
-        val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
-        val pastaTemp: Folders? = allPastasLiveData.value!![position]
 
-        val intent = Intent(requireContext(), ListaQrFragment::class.java)
-        intent.putExtra("id", pastaTemp!!.id)
-        intent.putExtra("userId", pastaTemp!!.userId)
-        startActivity(intent)
-    }
 
     fun listarpasta() {
         val call = request.getPastaByUser(idUser)

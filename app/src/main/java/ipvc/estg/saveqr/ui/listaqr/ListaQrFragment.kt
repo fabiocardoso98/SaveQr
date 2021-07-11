@@ -54,7 +54,12 @@ class ListaQrFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val request = ServiceBuilder.buildService(QrCodesEndpoint::class.java)
-       // val call = request.getQrCodeByUser(35)
+
+        var value = arguments?.getInt("userId")
+
+
+        Toast.makeText( activity, value.toString(), Toast.LENGTH_LONG).show()
+        //  val call = request.getQrCodeByUser(value)
         val call = request.getQrcodes()
         val allReportsLiveData = MutableLiveData<List<Qrcodes?>>()
 
