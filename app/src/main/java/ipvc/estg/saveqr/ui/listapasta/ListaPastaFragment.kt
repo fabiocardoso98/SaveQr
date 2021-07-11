@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -41,6 +42,11 @@ import java.time.format.DateTimeFormatter
 class ListaPastaFragment : Fragment() {
 
     private lateinit var listaPastaViewModel: ListaPastaViewModel
+    val adapter = PastaAdapter()
+    var idUser: Int = 0
+    var request = ServiceBuilder.buildService(foldersEndpoint::class.java)
+    var allPastasLiveData = MutableLiveData<List<Folders?>>()
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -49,6 +55,7 @@ class ListaPastaFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         listaPastaViewModel =
             ViewModelProviders.of(this).get(ListaPastaViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_listapasta, container, false)
@@ -60,55 +67,11 @@ class ListaPastaFragment : Fragment() {
 
         val loginShared: SharedPreferences? =
             activity?.getSharedPreferences(getString(R.string.login_p), Context.MODE_PRIVATE)
-        val idUser = loginShared?.getInt(getString(R.string.idLogin), 0)
+        idUser = loginShared?.getInt(getString(R.string.idLogin), 0)!!
         if (idUser != null) {
             val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
-
-
-            val adapter = PastaAdapter()
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-            val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
-
-            // allowed if nullableInt could not have changed since the null check
-            val idUser: Int = idUser
-            val call = request.getPastaByUser(idUser)
-
-            val allPastasLiveData = MutableLiveData<List<Folders?>>()
-
-            call.enqueue(object : Callback<FoldersReturn> {
-                override fun onResponse(
-                    call: Call<FoldersReturn>,
-                    response: Response<FoldersReturn>
-                ) {
-
-                    if (response.isSuccessful) {
-                        var arrAllReports: Array<Folders?> =
-                            arrayOfNulls<Folders>(response.body()!!.data.size)
-
-                        for ((index, item) in response.body()!!.data.withIndex()) {
-                            arrAllReports[index] = item
-                        }
-
-                        var allReports: List<Folders?> = arrAllReports.asList()
-
-                        allPastasLiveData.value = allReports
-
-
-                        allPastasLiveData.observe(requireActivity()) { reports ->
-                            reports.let { adapter.submitList(it) }
-                        }
-
-                    } else {
-
-                    }
-                }
-
-                override fun onFailure(call: Call<FoldersReturn>, t: Throwable) {
-                    Toast.makeText(activity, "DEU ERRO", Toast.LENGTH_LONG).show()
-                }
-            })
 
             textView4.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
@@ -290,5 +253,47 @@ class ListaPastaFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        listarpasta()
+        super.onResume()
+    }
+    fun listarpasta()
+    {
+        val call = request.getPastaByUser(idUser)
+
+
+        call.enqueue(object : Callback<FoldersReturn> {
+            override fun onResponse(
+                call: Call<FoldersReturn>,
+                response: Response<FoldersReturn>
+            ) {
+
+                if (response.isSuccessful) {
+                    var arrAllReports: Array<Folders?> =
+                        arrayOfNulls<Folders>(response.body()!!.data.size)
+
+                    for ((index, item) in response.body()!!.data.withIndex()) {
+                        arrAllReports[index] = item
+                    }
+
+                    var allReports: List<Folders?> = arrAllReports.asList()
+
+                    allPastasLiveData.value = allReports
+
+
+                    allPastasLiveData.observe(requireActivity()) { reports ->
+                        reports.let { adapter.submitList(it) }
+                    }
+
+                } else {
+
+                }
+            }
+
+            override fun onFailure(call: Call<FoldersReturn>, t: Throwable) {
+                Toast.makeText(activity, "DEU ERRO", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
 }
 
