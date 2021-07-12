@@ -17,7 +17,7 @@ import ipvc.estg.saveqr.History
 import ipvc.estg.saveqr.MainActivity
 import ipvc.estg.saveqr.R
 import ipvc.estg.saveqr.api.ServiceBuilder
-import ipvc.estg.saveqr.api.endpoints.QrCodesEndpoint
+import ipvc.estg.saveqr.api.api.endpoints.QrCodesEndpoint
 import ipvc.estg.saveqr.api.models.Qrcodes
 import ipvc.estg.saveqr.mvp.BaseMvpActivity
 import ipvc.estg.saveqr.ui.LerQr.LerQrActivityContract
@@ -108,7 +108,8 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
             "qr exemplo",
             result?.text.toString(),
             5,
-            5
+            5,
+            405
         )
         call.enqueue(object : Callback<Qrcodes> {
             override fun onResponse(
@@ -142,7 +143,7 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_scan_success, null)
         val dialogBuilder = AlertDialog.Builder(this)
             .setView(mDialogView)
-        mDialogView.tvResult.text = result
+        //mDialogView.tvResult.text = result
         mDialogView.btnSearch.setOnClickListener {
             mPresenter.searchByResultBtnPressed(result)
         }

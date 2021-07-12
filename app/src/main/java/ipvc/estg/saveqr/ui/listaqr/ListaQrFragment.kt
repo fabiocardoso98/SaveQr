@@ -16,8 +16,10 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ipvc.estg.saveqr.R
+import ipvc.estg.saveqr.Swipes.SwipeToDeleteCallback
 import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.api.endpoints.QrCodesEndpoint
+import ipvc.estg.saveqr.api.api.models.Folders
 import ipvc.estg.saveqr.api.models.QrCodesReturn
 import ipvc.estg.saveqr.api.models.Qrcodes
 import ipvc.estg.saveqr.ui.listaqr.adapter.QrAdapter
@@ -31,6 +33,7 @@ class ListaQrFragment : Fragment() {
 
     private lateinit var ListaQRviewModel: ListaQRViewModel
 
+    var folderId = arguments?.getInt("folderId")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,7 +61,7 @@ class ListaQrFragment : Fragment() {
         var folderId = arguments?.getInt("folderId")
 
 
-        Toast.makeText( activity, folderId.toString(), Toast.LENGTH_LONG).show()
+        //Toast.makeText( activity, folderId.toString(), Toast.LENGTH_LONG).show()
 
         val allReportsLiveData = MutableLiveData<List<Qrcodes?>>()
         val call = request.getQrCodeByFolder(folderId)
@@ -89,7 +92,44 @@ class ListaQrFragment : Fragment() {
             override fun onFailure(call: Call<QrCodesReturn>, t: Throwable) {
                 Toast.makeText( activity, "DEU ERRO", Toast.LENGTH_LONG).show()
             }
+
+
         })
+        val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position: Int = viewHolder.adapterPosition
+                val id: Int = allReportsLiveData.value?.get(position)?.id ?: 0
+                //val folderId: Int = allReportsLiveData.value?.get(position)?.id?: 0
+
+                //dinamico ID ID
+                val callDelete = request.deleteQRcode(id)
+
+                callDelete?.enqueue(object : Callback<Qrcodes> {
+                    override fun onResponse(call: Call<Qrcodes>, response: Response<Qrcodes>) {
+
+                        if (response.isSuccessful) {
+
+                            allReportsLiveData.value =
+                                allReportsLiveData.value!!.toMutableList().apply {
+                                    removeAt(position)
+                                }.toList()
+
+
+                            Toast.makeText(requireContext(), "Sucesso", Toast.LENGTH_LONG)
+                                .show()
+                        } else {
+                            Toast.makeText(requireContext(), "Erro", Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<Qrcodes>, t: Throwable) {
+                        Toast.makeText(requireContext(), "Erro", Toast.LENGTH_LONG).show()
+                    }
+                })
+            }
+        }
+
+
 
         return root
     }

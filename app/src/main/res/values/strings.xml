@@ -33,8 +33,16 @@
     <string name="login_shared" />
     <string name="id_utilizador" />
     <string name="status" />
+    <string name="qr_hint" />
+    <string name="search" />
+    <string name="copy" />
+    <string name="share" />
+    <string name="text_copied" />
+    <string name="text" />
 
-
+    <string name="flashlight_turned_off" />
+    <string name="flashlight_turned_on" />
+    <string name="privacy_policy" />
     <string name="qr_code">qr_code</string>
     <string name="enter_your_info">Enter your info</string>
     <string name="generate_qr_code">Generate QR Code</string>

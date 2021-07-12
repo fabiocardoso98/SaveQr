@@ -188,6 +188,7 @@ class ListaPastaFragment : Fragment() {
                     val pastaTemp: Folders? = allPastasLiveData.value!![position]
                     val bundle = bundleOf("id" to pastaTemp!!.id,"folderId" to id)
                     findNavController().navigate(R.id.nav_listaQrFragment,bundle)
+
                 }
 
             })
