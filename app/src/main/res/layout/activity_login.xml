@@ -61,7 +61,7 @@
         android:drawablePadding="10dp"
         android:ems="10"
         android:hint="@string/senha"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
         android:paddingRight="20dp"

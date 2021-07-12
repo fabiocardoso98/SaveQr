@@ -55,14 +55,13 @@ class ListaQrFragment : Fragment() {
 
         val request = ServiceBuilder.buildService(QrCodesEndpoint::class.java)
 
-        var value = arguments?.getInt("userId")
+        var folderId = arguments?.getInt("folderId")
 
 
-        Toast.makeText( activity, value.toString(), Toast.LENGTH_LONG).show()
-        //  val call = request.getQrCodeByUser(value)
-        val call = request.getQrcodes()
+        Toast.makeText( activity, folderId.toString(), Toast.LENGTH_LONG).show()
+
         val allReportsLiveData = MutableLiveData<List<Qrcodes?>>()
-
+        val call = request.getQrCodeByFolder(folderId)
         call.enqueue(object  : Callback<QrCodesReturn> {
             override fun onResponse(call: Call<QrCodesReturn>, response: Response<QrCodesReturn>) {
 

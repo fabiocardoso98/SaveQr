@@ -12,7 +12,8 @@ data class Qrcodes(
     val createDate: Date,
     val updateDate: Date,
     val categoryId: Int,
-    val userId: Int
+    val userId: Int,
+    val folderId: Int
 )
 
 data class QrCodesReturn(

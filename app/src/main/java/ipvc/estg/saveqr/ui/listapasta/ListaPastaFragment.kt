@@ -186,7 +186,7 @@ class ListaPastaFragment : Fragment() {
                 override fun onViewClick(position: Int) {
                     val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
                     val pastaTemp: Folders? = allPastasLiveData.value!![position]
-                    val bundle = bundleOf("id" to pastaTemp!!.id,"userId" to idUser)
+                    val bundle = bundleOf("id" to pastaTemp!!.id,"folderId" to id)
                     findNavController().navigate(R.id.nav_listaQrFragment,bundle)
                 }
 

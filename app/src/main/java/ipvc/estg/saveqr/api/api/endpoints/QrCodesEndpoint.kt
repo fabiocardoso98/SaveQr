@@ -11,9 +11,8 @@ interface QrCodesEndpoint {
     @GET("/qrcodes")
     fun getQrcodes(): Call<QrCodesReturn>
 
-    //este nao da
-    @GET("/qrcodes/user/{userId}")
-    fun getQrCodeByUser(@Path("userId") userId: Int?): Call<QrCodesReturn>
+    @GET("/qrcodes/folder/{folderId}")
+    fun getQrCodeByFolder(@Path("folderId") folderId: Int?): Call<QrCodesReturn>
 
     @FormUrlEncoded
     @POST("/qrcodes")
@@ -21,6 +20,7 @@ interface QrCodesEndpoint {
         @Field("name") name: String?,
         @Field("content") content: String?,
         @Field("categoryId") categoryId: Int?,
-        @Field("userId") userId: Int?
+        @Field("userId") userId: Int?,
+        @Field("folderId") folderId: Int?
     ): Call<Qrcodes>
 }
