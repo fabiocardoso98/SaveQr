@@ -20,9 +20,11 @@ import ipvc.estg.saveqr.R
 import ipvc.estg.saveqr.Swipes.SwipeToDeleteCallback
 import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.api.endpoints.QrCodesEndpoint
+import ipvc.estg.saveqr.api.api.endpoints.foldersEndpoint
 import ipvc.estg.saveqr.api.api.models.Folders
 import ipvc.estg.saveqr.api.models.QrCodesReturn
 import ipvc.estg.saveqr.api.models.Qrcodes
+import ipvc.estg.saveqr.ui.listapasta.PastaAdapter
 import ipvc.estg.saveqr.ui.listaqr.adapter.QrAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -33,7 +35,11 @@ class ListaQrFragment : Fragment() {
 
 
     private lateinit var ListaQRviewModel: ListaQRViewModel
-    var allPastasLiveData = MutableLiveData<List<Folders?>>()
+    val adapter = QrAdapter()
+    var idpasta: Int = 0
+    var allPastasLiveData = MutableLiveData<List<Qrcodes?>>()
+    var request = ServiceBuilder.buildService(QrCodesEndpoint::class.java)
+
 
 
     override fun onCreateView(
@@ -53,7 +59,6 @@ class ListaQrFragment : Fragment() {
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
 
-        val adapter = QrAdapter()
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -65,7 +70,6 @@ class ListaQrFragment : Fragment() {
         Toast.makeText( activity, value.toString(), Toast.LENGTH_LONG).show()
         //  val call = request.getQrCodeByUser(value)
         val call = request.getQrcodes()
-        val allReportsLiveData = MutableLiveData<List<Qrcodes?>>()
 
         call.enqueue(object  : Callback<QrCodesReturn> {
             override fun onResponse(call: Call<QrCodesReturn>, response: Response<QrCodesReturn>) {
@@ -79,10 +83,10 @@ class ListaQrFragment : Fragment() {
 
                     var allReports: List<Qrcodes?> = arrAllReports.asList()
 
-                    allReportsLiveData.value = allReports
+                    allPastasLiveData.value = allReports
 
 
-                    allReportsLiveData.observe(requireActivity()) { reports ->
+                    allPastasLiveData.observe(requireActivity()) { reports ->
                         reports.let { adapter.submitList(it) }
                     }
 
@@ -99,14 +103,13 @@ class ListaQrFragment : Fragment() {
         val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position: Int = viewHolder.adapterPosition
-                val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
-                val iduser: Int = allPastasLiveData.value?.get(position)?.userId ?: 0
+                val idpasta: Int = allPastasLiveData.value?.get(position)?.id ?: 0
 
                 //dinamico ID ID
-                //val callDelete = request.deleteFolders(id, iduser)
+                val callDelete = request.deleteQRcode(idpasta)
 
-               /* callDelete?.enqueue(object : Callback<Folders> {
-                    override fun onResponse(call: Call<Folders>, response: Response<Folders>) {
+                callDelete?.enqueue(object : Callback<Qrcodes> {
+                    override fun onResponse(call: Call<Qrcodes>, response: Response<Qrcodes>) {
 
                         if (response.isSuccessful) {
 
@@ -123,10 +126,10 @@ class ListaQrFragment : Fragment() {
                         }
                     }
 
-                    override fun onFailure(call: Call<Folders>, t: Throwable) {
+                    override fun onFailure(call: Call<Qrcodes>, t: Throwable) {
                         Toast.makeText(requireContext(), "Erro", Toast.LENGTH_LONG).show()
                     }
-                })*/
+                })
             }
         }
 

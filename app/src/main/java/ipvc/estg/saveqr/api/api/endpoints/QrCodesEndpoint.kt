@@ -1,5 +1,6 @@
 package ipvc.estg.saveqr.api.api.endpoints
 
+import ipvc.estg.saveqr.api.api.models.Folders
 import ipvc.estg.saveqr.api.models.QrCodesRegisterReturn
 import ipvc.estg.saveqr.api.models.QrCodesReturn
 import ipvc.estg.saveqr.api.models.Qrcodes
@@ -23,4 +24,9 @@ interface QrCodesEndpoint {
         @Field("categoryId") categoryId: Int?,
         @Field("userId") userId: Int?
     ): Call<Qrcodes>
+
+
+    @DELETE("/qrcodes/{id}")
+    fun deleteQRcode(@Path("id") id: Int): Call<Qrcodes>
+
 }
