@@ -22,7 +22,6 @@ interface QrCodesEndpoint {
         @Field("content") content: String?,
         @Field("categoryId") categoryId: Int?,
         @Field("userId") userId: Int?,
-        @Field("folderId") folderId: Int?
     ): Call<Qrcodes>
 
 

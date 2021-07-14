@@ -141,8 +141,7 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
             "qr exemplo",
             result,
             5,
-            5,
-            405
+            15,
         )
         call.enqueue(object : Callback<Qrcodes> {
             override fun onResponse(
