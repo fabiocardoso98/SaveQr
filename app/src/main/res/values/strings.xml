@@ -33,13 +33,13 @@
     <string name="login_shared" />
     <string name="id_utilizador" />
     <string name="status" />
-    <string name="qr_hint" />
-    <string name="search" />
-    <string name="copy" />
-    <string name="share" />
+    <string name="qr_hint">lerqr_hint</string>
+    <string name="search">search</string>
+    <string name="copy">copiar</string>
+    <string name="share">partilhar</string>
     <string name="text_copied" />
-    <string name="text" />
-
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
     <string name="flashlight_turned_off" />
     <string name="flashlight_turned_on" />
     <string name="privacy_policy" />
