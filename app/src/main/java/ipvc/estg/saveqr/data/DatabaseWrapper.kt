@@ -11,7 +11,7 @@ class DatabaseWrapper(context: Context): SQLiteOpenHelper(context, "qr-code.db",
     private val TAG = javaClass.name
 
     private val DB_NAME = "qr-code.db"
-    private val DB_VERSION = 1
+    private val DB_VERSION = 2
 
 
     override fun onCreate(db: SQLiteDatabase?) {

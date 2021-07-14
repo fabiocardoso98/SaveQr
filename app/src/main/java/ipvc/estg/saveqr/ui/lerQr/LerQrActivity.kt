@@ -143,7 +143,7 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_scan_success, null)
         val dialogBuilder = AlertDialog.Builder(this)
             .setView(mDialogView)
-        //mDialogView.tvResult.text = result
+        mDialogView.tvResult.text = result
         mDialogView.btnSearch.setOnClickListener {
             mPresenter.searchByResultBtnPressed(result)
         }
@@ -166,7 +166,6 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
     }
 
     //Pedir premissao camara
-    //https://www.geeksforgeeks.org/android-how-to-request-permissions-in-android-application/
     private fun checkPermission(permission: String, requestCode: Int) {
         if (ContextCompat.checkSelfPermission(this@LerQrActivity, permission) == PackageManager.PERMISSION_DENIED) {
             // Requesting the permission

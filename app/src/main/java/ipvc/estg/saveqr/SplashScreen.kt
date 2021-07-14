@@ -9,6 +9,7 @@ import android.os.Handler
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import ipvc.estg.saveqr.ui.lerQr.LerQrActivity
 
 class SplashScreen : AppCompatActivity() {
 
@@ -32,7 +33,7 @@ class SplashScreen : AppCompatActivity() {
 
             }, SPLASH_TIME)
             qr.setOnClickListener {
-                val intent = Intent(this@SplashScreen, MainActivity::class.java)
+                val intent = Intent(this@SplashScreen, LerQrActivity::class.java)
                 intent.putExtra("EXTRA", "Registar")
                 startActivity(intent)
                 registo=1;
