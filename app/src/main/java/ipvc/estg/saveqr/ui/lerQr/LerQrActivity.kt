@@ -48,7 +48,7 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
         //Verificar permiss
         checkPermission(Manifest.permission.CAMERA,401)
 
-       mHistoryOrm = HistoryORM()
+        mHistoryOrm = HistoryORM()
         initUI()
     }
 
@@ -87,11 +87,11 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
                 }
             }
             R.id.btnHistory -> {
-              //  startActivity(Intent(this, HistoryActivity::class.java))
+                //  startActivity(Intent(this, HistoryActivity::class.java))
             }
             R.id.privacyPolicyTextView -> {
-              //  val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(SyncStateContract.Constants.privacyPolicy))
-               // startActivity(browserIntent)
+                //  val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(SyncStateContract.Constants.privacyPolicy))
+                // startActivity(browserIntent)
             }
         }
     }
@@ -122,8 +122,11 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
                     // Log.d("***","Sucesso")
                     Toast.makeText(this@LerQrActivity, "Sucesso!", Toast.LENGTH_SHORT)
                         .show();
-                    startActivity(intent)
-                    finish()
+                    //    startActivity(intent)
+                    //   finish()
+
+
+
                     // communicator.passDataconn(root.nome.text.toString())
                     //  communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
                     // getActivity()?.getSupportFragmentManager()?.beginTransaction().remove(this@RegistarFragment).commit();
@@ -166,13 +169,14 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
     }
 
     //Pedir premissao camara
+    //https://www.geeksforgeeks.org/android-how-to-request-permissions-in-android-application/
     private fun checkPermission(permission: String, requestCode: Int) {
         if (ContextCompat.checkSelfPermission(this@LerQrActivity, permission) == PackageManager.PERMISSION_DENIED) {
             // Requesting the permission
-           // Toast.makeText(this@LerQrActivity, "Without Permission", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(this@LerQrActivity, "Without Permission", Toast.LENGTH_SHORT).show()
             ActivityCompat.requestPermissions(this@LerQrActivity, arrayOf(permission), requestCode)
         } else {
-          //  Toast.makeText(this@LerQrActivity, "Permission already granted", Toast.LENGTH_SHORT).show()
+            //  Toast.makeText(this@LerQrActivity, "Permission already granted", Toast.LENGTH_SHORT).show()
         }
     }
 }
