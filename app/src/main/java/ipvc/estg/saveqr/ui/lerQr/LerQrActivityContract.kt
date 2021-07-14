@@ -16,5 +16,7 @@ object LerQrActivityContract {
         fun searchByResultBtnPressed(result:String)
         fun copyResultBtnPressed(result: String)
         fun shareResultBtnPressed(result: String)
+        fun GravarQr(result:String)
+
     }
 }

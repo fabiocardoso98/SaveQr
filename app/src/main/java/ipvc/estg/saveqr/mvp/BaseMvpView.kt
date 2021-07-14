@@ -21,4 +21,6 @@ interface BaseMvpView {
 
     fun shareResultViewSharingIntent(result: String)
 
+    fun GravarQr(result: String)
+
 }

@@ -102,11 +102,44 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
             result?.text.toString())
         mHistoryOrm?.add(this, history)
         mPresenter.qrCodeScanned(history)
+
+    }
+
+    override fun showSuccessScanningDialog(result: String) {
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_scan_success, null)
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+        mDialogView.tvResult.text = result
+        mDialogView.btnSearch.setOnClickListener {
+            mPresenter.searchByResultBtnPressed(result)
+        }
+        mDialogView.btnCopy.setOnClickListener {
+            mPresenter.copyResultBtnPressed(result)
+        }
+        mDialogView.btnGravar.setOnClickListener {
+            mPresenter.GravarQr(result)
+        }
+        mDialogView.btnShare.setOnClickListener {
+            mPresenter.shareResultBtnPressed(result)
+        }
+        dialog = dialogBuilder.create()
+        dialog?.setOnCancelListener {
+            continueScanning()
+        }
+        dialog?.show()
+    }
+
+    override fun continueScanning() {
+        dialog?.dismiss()
+        mScannerView?.resumeCameraPreview(this)
+    }
+
+    override fun GravarQr(result: String) {
         val intent = Intent(this@LerQrActivity, MainActivity::class.java)
         val request = ServiceBuilder.buildService(QrCodesEndpoint::class.java)
         val call = request.postQrCode(
             "qr exemplo",
-            result?.text.toString(),
+            result,
             5,
             5,
             405
@@ -140,32 +173,6 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
                 Toast.makeText(this@LerQrActivity, "Erro, tente mais tarde!", Toast.LENGTH_SHORT).show();
             }
         })
-    }
-
-    override fun showSuccessScanningDialog(result: String) {
-        val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_scan_success, null)
-        val dialogBuilder = AlertDialog.Builder(this)
-            .setView(mDialogView)
-        mDialogView.tvResult.text = result
-        mDialogView.btnSearch.setOnClickListener {
-            mPresenter.searchByResultBtnPressed(result)
-        }
-        mDialogView.btnCopy.setOnClickListener {
-            mPresenter.copyResultBtnPressed(result)
-        }
-        mDialogView.btnShare.setOnClickListener {
-            mPresenter.shareResultBtnPressed(result)
-        }
-        dialog = dialogBuilder.create()
-        dialog?.setOnCancelListener {
-            continueScanning()
-        }
-        dialog?.show()
-    }
-
-    override fun continueScanning() {
-        dialog?.dismiss()
-        mScannerView?.resumeCameraPreview(this)
     }
 
     //Pedir premissao camara

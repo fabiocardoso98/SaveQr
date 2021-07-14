@@ -33,4 +33,9 @@ open class LerQrActivityPresenter: BaseMvpPresenterImpl<LerQrActivityContract.Vi
     override fun qrCodeScanned(history: History) {
         mView?.showSuccessScanningDialog(history.context)
     }
+    override fun GravarQr(result: String) {
+        mView?.GravarQr(result)
+
+        mView?.continueScanning()
+    }
 }

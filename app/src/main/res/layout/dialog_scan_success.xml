@@ -32,7 +32,17 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
+        <com.devspark.robototextview.widget.RobotoButton
+            android:id="@+id/btnGravar"
+            android:text="@string/gravar"
+            android:textStyle="normal"
+            android:textAllCaps="false"
+            android:textSize="@dimen/sp_20"
+            android:textColor="@color/colorOrange"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="@dimen/dp_48" />
         <com.devspark.robototextview.widget.RobotoButton
             android:id="@+id/btnSearch"
             android:text="@string/search"
