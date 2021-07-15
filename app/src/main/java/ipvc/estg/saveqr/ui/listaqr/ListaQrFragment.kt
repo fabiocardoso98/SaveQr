@@ -27,6 +27,7 @@ import ipvc.estg.saveqr.api.api.endpoints.QrCodesEndpoint
 import ipvc.estg.saveqr.api.api.models.Folders
 import ipvc.estg.saveqr.api.models.QrCodesReturn
 import ipvc.estg.saveqr.api.models.Qrcodes
+import ipvc.estg.saveqr.ui.listapasta.PastaAdapter
 import ipvc.estg.saveqr.ui.listaqr.adapter.QrAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,6 +40,8 @@ class ListaQrFragment : Fragment() {
     private lateinit var ListaQRviewModel: ListaQRViewModel
 
     var folderId = arguments?.getInt("folderId")
+    var allReportsLiveData = MutableLiveData<List<Qrcodes?>>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,7 +71,6 @@ class ListaQrFragment : Fragment() {
 
         //Toast.makeText( activity, folderId.toString(), Toast.LENGTH_LONG).show()
 
-        val allReportsLiveData = MutableLiveData<List<Qrcodes?>>()
         val call = request.getQrCodeByFolder(folderId)
         call.enqueue(object  : Callback<QrCodesReturn> {
             override fun onResponse(call: Call<QrCodesReturn>, response: Response<QrCodesReturn>) {
@@ -186,6 +188,18 @@ class ListaQrFragment : Fragment() {
 
 
         }
+
+        adapter.setOnItemClick(object : QrAdapter.onItemClick {
+            override fun onViewClick(position: Int) {
+                val id: Int = allReportsLiveData.value?.get(position)?.id ?: 0
+                val pastaTemp: Qrcodes? = allReportsLiveData.value!![position]
+                val bundle = bundleOf("id" to pastaTemp!!.id,"QrId" to id)
+                findNavController().navigate(R.id.nav_detalhesQR,bundle)
+
+            }
+
+        })
+
         val itemTouchHelperEdit = ItemTouchHelper(swipeHandlerEdit)
         itemTouchHelperEdit.attachToRecyclerView(recyclerView)
 
