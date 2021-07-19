@@ -22,7 +22,7 @@ data class QrCodesReturn(
     val data: List<Qrcodes>,
     val error: String
 )
-data class QrCodesRegisterReturn(
+data class QrCodeReturn(
     val msg: String,
     val status: String,
     val data: Qrcodes,

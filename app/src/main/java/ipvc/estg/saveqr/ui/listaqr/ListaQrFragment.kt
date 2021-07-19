@@ -39,7 +39,6 @@ class ListaQrFragment : Fragment() {
 
     private lateinit var ListaQRviewModel: ListaQRViewModel
 
-    var folderId = arguments?.getInt("folderId")
     var allReportsLiveData = MutableLiveData<List<Qrcodes?>>()
 
 

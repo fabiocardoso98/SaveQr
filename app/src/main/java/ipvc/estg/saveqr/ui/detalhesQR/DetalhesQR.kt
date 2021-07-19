@@ -9,14 +9,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 
 import ipvc.estg.saveqr.R
-import ipvc.estg.saveqr.ui.listaqr.ListaQRViewModel
-import kotlinx.android.synthetic.main.detalhes_q_r_fragment.*
+import ipvc.estg.saveqr.api.ServiceBuilder
+import ipvc.estg.saveqr.api.api.endpoints.QrCodesEndpoint
+import ipvc.estg.saveqr.api.models.QrCodeReturn
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class DetalhesQR : Fragment() {
 
@@ -25,7 +30,9 @@ class DetalhesQR : Fragment() {
     }
 
     private lateinit var DetalhesQRviewModel: DetalhesQRViewModel
+    var qrcontent=""
 
+    var idIVQrcode: ImageView? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,21 +43,38 @@ class DetalhesQR : Fragment() {
             //     textView.text = it
 
         })
-        val content = "ola eu sou um qrcode"
-        val writer = QRCodeWriter()
-        val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512)
-        val width = bitMatrix.width
-        val height = bitMatrix.height
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-        for (x in 0 until width) {
-            for (y in 0 until height) {
-                bitmap.setPixel(x, y, if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE)
-            }
-        }
-        val idIVQrcode: ImageView=root.findViewById(R.id.idIVQrcode)
-        idIVQrcode.setImageBitmap(bitmap)
-
+        idIVQrcode=root.findViewById(R.id.idIVQrcode)
+        getQr()
         return root
+    }
+    fun getQr() {
+        val request = ServiceBuilder.buildService(QrCodesEndpoint::class.java)
+        val QrId = this.arguments?.getInt("QrId")
+        val call = request.getQrCodeById(QrId)
+        call.enqueue(object : Callback<QrCodeReturn> {
+            override fun onResponse(call: Call<QrCodeReturn>, response: Response<QrCodeReturn>) {
+                if (response.code() == 200) {
+                    val qr = response.body()!!
+                    val content = qr.data.content
+                    val writer = QRCodeWriter()
+                    val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512)
+                    val width = bitMatrix.width
+                    val height = bitMatrix.height
+                    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+                    for (x in 0 until width) {
+                        for (y in 0 until height) {
+                            bitmap.setPixel(x, y, if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE)
+                        }
+                    }
+                    idIVQrcode?.setImageBitmap(bitmap)
+                }
+            }
+
+            override fun onFailure(call: Call<QrCodeReturn>, t: Throwable) {
+                Toast.makeText( activity, "DEU ERRO", Toast.LENGTH_LONG).show()
+
+            }
+        })
     }
 
 }
