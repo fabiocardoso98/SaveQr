@@ -73,5 +73,12 @@ dependencies {
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.1.0@aar'
     implementation 'com.github.johnkil.android-robototextview:robototextview:4.0.0'
-    implementation 'me.dm7.barcodescanner:zxing:1.9.8'
+    implementation "com.pdftron:pdftron:$pdftron_version"
+    implementation "com.pdftron:tools:$pdftron_version"
+
+    implementation "me.dm7.barcodescanner:zxing:1.9.13"
+
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+
 }
