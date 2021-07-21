@@ -13,7 +13,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import ipvc.estg.saveqr.barcode.RegionSelect
 import com.pdftron.pdf.PDFViewCtrl
 import com.pdftron.pdf.config.ToolManagerBuilder
 import com.pdftron.pdf.config.ViewerBuilder2
@@ -25,6 +24,8 @@ import com.pdftron.pdf.utils.CommonToast
 import com.pdftron.pdf.utils.Utils
 import com.pdftron.pdf.widget.toolbar.builder.AnnotationToolbarBuilder
 import com.pdftron.pdf.widget.toolbar.component.DefaultToolbars
+import ipvc.estg.saveqr.barcode.RegionSelect
+
 
 class QrPdf : AppCompatActivity(), PdfViewCtrlTabHostFragment2.TabHostListener {
 
@@ -34,10 +35,11 @@ class QrPdf : AppCompatActivity(), PdfViewCtrlTabHostFragment2.TabHostListener {
     private val BARCODE_ID = 1001
     private val BARCODE_SCANNER_ID = 1002
     private val SELECT_REGION_ID = 1003
-
+    private val CHOOSE_FILE_REQUESTCODE = 8777
     private val CAMERA_PERMISSION_REQUEST = 1000
     private val SCANNER_REQUEST = 1001
-
+    val PICK_PDF_CODE = 2342
+    var path_pdf: String? =null
     private var mHandleBarcode = false
     private var mBarcodeLink: String? = null
 
@@ -47,73 +49,12 @@ class QrPdf : AppCompatActivity(), PdfViewCtrlTabHostFragment2.TabHostListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qr)
 
-        val f = Utils.copyResourceToLocal(this, R.raw.example, "example", ".pdf")
-        val uri = Uri.fromFile(f)
+        val intentPDF = Intent(Intent.ACTION_GET_CONTENT)
+        intentPDF.type = "application/pdf"
+        intentPDF.addCategory(Intent.CATEGORY_OPENABLE)
+        startActivityForResult(Intent.createChooser(intentPDF, "Select File"), PICK_PDF_CODE)
 
-        val toolManagerBuilder = ToolManagerBuilder.from()
-            .addCustomizedTool(BarcodeCreate.MODE, BarcodeCreate::class.java)
-            .addCustomizedTool(ToolManager.ToolMode.ANNOT_EDIT, BarcodeEdit::class.java)
-            .addCustomizedTool(RegionSelect.MODE, RegionSelect::class.java)
 
-        val barcodeTag = "Barcode"
-
-        val barcodeToolbarBuilder = AnnotationToolbarBuilder.withTag(barcodeTag)
-            .addCustomSelectableButton(
-                R.string.tool_qr_code_stamp,
-                R.drawable.ic_qr_code_black_24dp, QR_CODE_ID
-            )
-            .addCustomSelectableButton(
-                R.string.tool_barcode_stamp,
-                R.drawable.ic_price, BARCODE_ID
-            )
-            .addCustomButton(
-                R.string.tool_barcode_scanner_stamp,
-                R.drawable.ic_qr_code_scanner_black_24dp, BARCODE_SCANNER_ID
-            )
-            .addCustomSelectableButton(
-                R.string.tool_select_region,
-                R.drawable.ic_select_rectangular_black_24dp, SELECT_REGION_ID
-            )
-            .addCustomStickyButton(
-                com.pdftron.pdf.tools.R.string.undo,
-                com.pdftron.pdf.tools.R.drawable.ic_undo_black_24dp,
-                DefaultToolbars.ButtonId.UNDO.value()
-            )
-            .addCustomStickyButton(
-                com.pdftron.pdf.tools.R.string.redo,
-                com.pdftron.pdf.tools.R.drawable.ic_redo_black_24dp,
-                DefaultToolbars.ButtonId.REDO.value()
-            )
-
-        val viewToolbarBuilder = AnnotationToolbarBuilder
-            .withTag(DefaultToolbars.TAG_VIEW_TOOLBAR)
-            .setIcon(R.drawable.ic_view)
-            .setToolbarName(getString(R.string.toolbar_title_view))
-
-        val viewerConfig = ViewerConfig.Builder()
-            .multiTabEnabled(false)
-            .showCloseTabOption(false)
-            .saveCopyExportPath(this.filesDir.absolutePath)
-            .openUrlCachePath(this.filesDir.absolutePath)
-            .setInitialToolbarTag(barcodeTag)
-            .rememberLastUsedToolbar(false)
-            .toolManagerBuilder(toolManagerBuilder)
-            .addToolbarBuilder(viewToolbarBuilder)
-            .addToolbarBuilder(barcodeToolbarBuilder)
-            .addToolbarBuilder(DefaultToolbars.defaultAnnotateToolbar.setToolbarName(getString(R.string.toolbar_title_annotate)))
-            .build()
-
-        mPdfViewCtrlTabHostFragment = ViewerBuilder2.withUri(uri)
-            .usingConfig(viewerConfig)
-            .usingTheme(R.style.PDFTronAppTheme)
-            .build(this)
-        mPdfViewCtrlTabHostFragment!!.addHostListener(this)
-
-        // Add the fragment to our activity
-        val ft =
-            supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_container, mPdfViewCtrlTabHostFragment!!)
-        ft.commit()
     }
 
     private fun startScannerActivity() {
@@ -151,7 +92,84 @@ class QrPdf : AppCompatActivity(), PdfViewCtrlTabHostFragment2.TabHostListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_PDF_CODE && resultCode == Activity.RESULT_OK) {
+            // The result data contains a URI for the document or directory that
+            // the user selected.
 
+
+            data?.also { uri ->
+                // Perform operations on the document using its URI.
+                path_pdf=uri.data.toString()
+
+            }
+            val uri = Uri.parse(path_pdf)
+
+
+            val toolManagerBuilder = ToolManagerBuilder.from()
+                .addCustomizedTool(BarcodeCreate.MODE, BarcodeCreate::class.java)
+                .addCustomizedTool(ToolManager.ToolMode.ANNOT_EDIT, BarcodeEdit::class.java)
+                .addCustomizedTool(RegionSelect.MODE, RegionSelect::class.java)
+
+            val barcodeTag = "Barcode"
+
+            val barcodeToolbarBuilder = AnnotationToolbarBuilder.withTag(barcodeTag)
+                .addCustomSelectableButton(
+                    R.string.tool_qr_code_stamp,
+                    R.drawable.ic_qr_code_black_24dp, QR_CODE_ID
+                )
+                .addCustomSelectableButton(
+                    R.string.tool_barcode_stamp,
+                    R.drawable.ic_price, BARCODE_ID
+                )
+                .addCustomButton(
+                    R.string.tool_barcode_scanner_stamp,
+                    R.drawable.ic_qr_code_scanner_black_24dp, BARCODE_SCANNER_ID
+                )
+                .addCustomSelectableButton(
+                    R.string.tool_select_region,
+                    R.drawable.ic_select_rectangular_black_24dp, SELECT_REGION_ID
+                )
+                .addCustomStickyButton(
+                    com.pdftron.pdf.tools.R.string.undo,
+                    com.pdftron.pdf.tools.R.drawable.ic_undo_black_24dp,
+                    DefaultToolbars.ButtonId.UNDO.value()
+                )
+                .addCustomStickyButton(
+                    com.pdftron.pdf.tools.R.string.redo,
+                    com.pdftron.pdf.tools.R.drawable.ic_redo_black_24dp,
+                    DefaultToolbars.ButtonId.REDO.value()
+                )
+
+            val viewToolbarBuilder = AnnotationToolbarBuilder
+                .withTag(DefaultToolbars.TAG_VIEW_TOOLBAR)
+                .setIcon(R.drawable.ic_view)
+                .setToolbarName(getString(R.string.toolbar_title_view))
+
+            val viewerConfig = ViewerConfig.Builder()
+                .multiTabEnabled(false)
+                .showCloseTabOption(false)
+                .saveCopyExportPath(this.filesDir.absolutePath)
+                .openUrlCachePath(this.filesDir.absolutePath)
+                .setInitialToolbarTag(barcodeTag)
+                .rememberLastUsedToolbar(false)
+                .toolManagerBuilder(toolManagerBuilder)
+                .addToolbarBuilder(viewToolbarBuilder)
+                .addToolbarBuilder(barcodeToolbarBuilder)
+                .addToolbarBuilder(DefaultToolbars.defaultAnnotateToolbar.setToolbarName(getString(R.string.toolbar_title_annotate)))
+                .build()
+
+            mPdfViewCtrlTabHostFragment = ViewerBuilder2.withUri(uri)
+                .usingConfig(viewerConfig)
+                .usingTheme(R.style.PDFTronAppTheme)
+                .build(this)
+            mPdfViewCtrlTabHostFragment!!.addHostListener(this)
+
+            // Add the fragment to our activity
+            val ft =
+                supportFragmentManager.beginTransaction()
+            ft.replace(R.id.fragment_container, mPdfViewCtrlTabHostFragment!!)
+            ft.commit()
+        }
         if (requestCode == SCANNER_REQUEST) {
             mHandleBarcode = true
             mBarcodeLink = data?.getStringExtra("scan_result")

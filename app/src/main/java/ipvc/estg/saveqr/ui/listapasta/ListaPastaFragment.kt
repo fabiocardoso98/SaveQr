@@ -91,6 +91,7 @@ class ListaPastaFragment : Fragment() {
                 val intent = Intent(this.context, QrPdf::class.java)
                 startActivity(intent)
             }
+
             root.add.setOnClickListener {
 
                 val mDialogView =
