@@ -1,18 +1,25 @@
 package ipvc.estg.saveqr.ui.listaqr.adapter
 
+import android.content.ContentValues.TAG
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ipvc.estg.saveqr.R
 import ipvc.estg.saveqr.api.models.Qrcodes
 
+
 class QrAdapter : ListAdapter<Qrcodes, QrAdapter.QrViewHolder>(QrComparator()) {
 
     private var onItemClickListener : onItemClick? = null
+
 
     public fun setOnItemClick(newOnItemClickListener: QrAdapter.onItemClick) {
         onItemClickListener= newOnItemClickListener
@@ -43,11 +50,20 @@ class QrAdapter : ListAdapter<Qrcodes, QrAdapter.QrViewHolder>(QrComparator()) {
         init {
             itemView.setOnClickListener { v: View ->
                 val position = adapterPosition
-                if(position != RecyclerView.NO_POSITION) {
+                if (position != RecyclerView.NO_POSITION) {
                     onItemClick?.onViewClick(position)
                 }
             }
 
+            itemView.setOnLongClickListener{
+                Log.d(TAG,"onNoteClick: click")
+                //var cardviewqr: CardView
+
+                (itemView.getBackground()).setColorFilter(Color.parseColor("#FFDE03"), PorterDuff.Mode.SRC_IN);
+                //itemView.getBackground().setColorFilter(Color.parseColor("#99a8ff"), PorterDuff.Mode.SRC_ATOP);
+                //cardviewqr.setCardBackgroundColor(Color.parseColor("#99a8ff"))
+                return@setOnLongClickListener true
+            }
         }
 
         companion object {
