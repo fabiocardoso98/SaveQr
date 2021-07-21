@@ -25,6 +25,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ipvc.estg.saveqr.QrPdf
 import ipvc.estg.saveqr.R
 import ipvc.estg.saveqr.Swipes.SwipeToDeleteCallback
 import ipvc.estg.saveqr.Swipes.SwipeToEditCallback
@@ -86,7 +87,10 @@ class ListaPastaFragment : Fragment() {
                     null
                 )
             )
-
+            root.button_pdf.setOnClickListener {
+                val intent = Intent(this.context, QrPdf::class.java)
+                startActivity(intent)
+            }
             root.add.setOnClickListener {
 
                 val mDialogView =

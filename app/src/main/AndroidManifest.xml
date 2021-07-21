@@ -21,6 +21,8 @@
         <activity android:name=".RegistarActivity"></activity>
         <activity android:name=".ui.lerQr.LerQrActivity"></activity>
         <activity android:name=".popup_insertPasta"></activity>
+        <activity android:name=".QrPdf" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".SimpleScannerActivity" android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".MainActivity"
@@ -33,6 +35,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="pdftron_license_key"
+            android:value="${pdftronLicenseKey}"/>
     </application>
 
 </manifest>
