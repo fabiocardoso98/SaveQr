@@ -55,7 +55,8 @@ class ListaQrFragment : Fragment() {
             //     textView.text = it
 
         })
-        add.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_addQrUpdate, null))
+        val bundle = bundleOf( "pasta" to arguments?.getInt("folderId"))
+        add.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_addQrUpdate, bundle))
     //    textView4.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_detalhesQR, null))
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
@@ -141,7 +142,7 @@ class ListaQrFragment : Fragment() {
                 val position: Int = viewHolder.adapterPosition
                 val id: Int = allReportsLiveData.value?.get(position)?.id ?: 0
                 val pastaTemp: Qrcodes? = allReportsLiveData.value!![position]
-                val bundle = bundleOf("id" to pastaTemp!!.id,"name" to pastaTemp!!.name, "latlng" to pastaTemp!!.latlng, "tipoId" to pastaTemp!!.categoryId )
+                val bundle = bundleOf("id" to pastaTemp!!.id,"name" to pastaTemp!!.name, "latlng" to pastaTemp!!.latlng, "tipoId" to pastaTemp!!.categoryId, "pasta" to arguments?.getInt("folderId"))
                 findNavController().navigate(R.id.nav_addQrUpdate,bundle)
                 allReportsLiveData.value = allReportsLiveData.value!!.toMutableList().apply {
                     removeAt(position)

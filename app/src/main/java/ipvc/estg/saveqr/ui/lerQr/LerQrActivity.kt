@@ -1,13 +1,14 @@
 package ipvc.estg.saveqr.ui.lerQr
 
 import android.Manifest
-import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -21,7 +22,6 @@ import ipvc.estg.saveqr.api.api.endpoints.QrCodesEndpoint
 import ipvc.estg.saveqr.api.api.endpoints.foldersEndpoint
 import ipvc.estg.saveqr.api.api.models.FoldersQr
 import ipvc.estg.saveqr.api.models.QrCodeReturn
-import ipvc.estg.saveqr.api.models.Qrcodes
 import ipvc.estg.saveqr.mvp.BaseMvpActivity
 import ipvc.estg.saveqr.ui.LerQr.LerQrActivityContract
 import ipvc.estg.saveqr.ui.data.ORM.HistoryORM
@@ -34,6 +34,7 @@ import retrofit2.Response
 import java.text.DateFormat
 import java.util.*
 
+
 class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityContract.Presenter>(),
     LerQrActivityContract.View, View.OnClickListener, ZXingScannerView.ResultHandler {
 
@@ -41,16 +42,19 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
     private var flashState: Boolean = false
     private var dialog: AlertDialog? = null
     private var mHistoryOrm: HistoryORM? = null
-
     override var mPresenter: LerQrActivityContract.Presenter = LerQrActivityPresenter()
 
+    var folderId = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ler_qr)
-
         //Verificar permiss
         checkPermission(Manifest.permission.CAMERA,401)
+      val getIntent = intent
+//call a TextView object to set the string to
+//call a TextView object to set the string to
 
+       folderId = getIntent.getIntExtra("pasta",0)
         mHistoryOrm = HistoryORM()
         initUI()
     }
@@ -138,6 +142,10 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
     }
 
     override fun GravarQr(result: String) {
+        val loginShared: SharedPreferences? = getSharedPreferences(getString(R.string.login_p), Context.MODE_PRIVATE)
+      //  val ze= folderId
+       // val ze2= folderId2
+       // val ze4= folderId4
         val intent = Intent(this@LerQrActivity, MainActivity::class.java)
         val request = ServiceBuilder.buildService(QrCodesEndpoint::class.java)
         val request1 = ServiceBuilder.buildService(foldersEndpoint::class.java)
@@ -145,7 +153,7 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
             "qr exemplosssr",
             result,
             5,
-            15,
+            loginShared?.getInt(getString(R.string.idLogin), 0)!!,
         )
         call.enqueue(object : Callback<QrCodeReturn> {
             override fun onResponse(
@@ -154,11 +162,12 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
             ) {
 
                 val id= response.body()?.data!!.id
-                val folderId= response.body()?.data!!.folderId
+
+
 
 
                     val call1 = request1.postFoldersQr(
-                        folderId,
+                       folderId,
                         id,
                     )
                     call1.enqueue(object : Callback<FoldersQr> {

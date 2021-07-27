@@ -8,6 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 
 import ipvc.estg.saveqr.R
 import ipvc.estg.saveqr.ui.lerQr.LerQrActivity
@@ -28,7 +31,8 @@ class AddQrUpdate : Fragment() {
         val addqr: ImageView = root.findViewById(R.id.plus)
         addqr.setOnClickListener {
             val intent = Intent(requireContext(), LerQrActivity::class.java)
-            intent.putExtra("EXTRA", "")
+            val pasta = arguments?.getInt("pasta")
+            intent.putExtra("pasta",pasta)
             startActivity(intent)
         }
         return root
