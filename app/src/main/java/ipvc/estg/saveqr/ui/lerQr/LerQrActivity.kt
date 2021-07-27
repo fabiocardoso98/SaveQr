@@ -143,9 +143,6 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
 
     override fun GravarQr(result: String) {
         val loginShared: SharedPreferences? = getSharedPreferences(getString(R.string.login_p), Context.MODE_PRIVATE)
-      //  val ze= folderId
-       // val ze2= folderId2
-       // val ze4= folderId4
         val intent = Intent(this@LerQrActivity, MainActivity::class.java)
         val request = ServiceBuilder.buildService(QrCodesEndpoint::class.java)
         val request1 = ServiceBuilder.buildService(foldersEndpoint::class.java)
