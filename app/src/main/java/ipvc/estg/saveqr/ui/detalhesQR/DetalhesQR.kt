@@ -74,6 +74,7 @@ class DetalhesQR : Fragment() {
                     }
                     idIVQrcode?.setImageBitmap(bitmap)
                 }
+
                 idIVQrcode?.setOnClickListener {
                     val qr = response.body()!!
                     val uri: Uri =
