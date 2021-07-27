@@ -25,7 +25,7 @@ interface QrCodesEndpoint {
         @Field("content") content: String?,
         @Field("categoryId") categoryId: Int?,
         @Field("userId") userId: Int?,
-    ): Call<Qrcodes>
+    ): Call<QrCodeReturn>
 
 
     @DELETE("/qrcodes/{id}")

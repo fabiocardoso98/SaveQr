@@ -20,6 +20,7 @@ import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.api.endpoints.QrCodesEndpoint
 import ipvc.estg.saveqr.api.api.endpoints.foldersEndpoint
 import ipvc.estg.saveqr.api.api.models.FoldersQr
+import ipvc.estg.saveqr.api.models.QrCodeReturn
 import ipvc.estg.saveqr.api.models.Qrcodes
 import ipvc.estg.saveqr.mvp.BaseMvpActivity
 import ipvc.estg.saveqr.ui.LerQr.LerQrActivityContract
@@ -141,22 +142,22 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
         val request = ServiceBuilder.buildService(QrCodesEndpoint::class.java)
         val request1 = ServiceBuilder.buildService(foldersEndpoint::class.java)
         val call = request.postQrCode(
-            "qr exemplo",
+            "qr exemplos",
             result,
             5,
             15,
         )
-        call.enqueue(object : Callback<Qrcodes> {
+        call.enqueue(object : Callback<QrCodeReturn> {
             override fun onResponse(
-                call: Call<Qrcodes>,
-                response: Response<Qrcodes>
+                call: Call<QrCodeReturn>,
+                response: Response<QrCodeReturn>
             ) {
 
-                val id= response.body()?.id // id
+                val id= response.body()?.data!!.id // id
 
 
                     val call1 = request1.postFoldersQr(
-                        575 ,
+                        id ,
                         715,
                     )
                     call1.enqueue(object : Callback<FoldersQr> {
@@ -167,7 +168,7 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
 
 
                             if (response.isSuccessful) {
-                                Toast.makeText(this@LerQrActivity, "response.body()?.id", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this@LerQrActivity, id, Toast.LENGTH_SHORT).show();
                             }
 
                         }
@@ -179,7 +180,7 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
 
                 }
 
-            override fun onFailure(call: Call<Qrcodes>, t: Throwable) {
+            override fun onFailure(call: Call<QrCodeReturn>, t: Throwable) {
                 Toast.makeText(this@LerQrActivity, "Erro, tente mais tarde!", Toast.LENGTH_SHORT).show();
             }
         })
