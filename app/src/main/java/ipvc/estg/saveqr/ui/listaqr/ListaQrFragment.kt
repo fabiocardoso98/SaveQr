@@ -2,10 +2,8 @@ package ipvc.estg.saveqr.ui.listaqr
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -14,6 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
 import androidx.navigation.Navigation
+import androidx.navigation.Navigation.createNavigateOnClickListener
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -40,12 +39,14 @@ class ListaQrFragment : Fragment() {
     private lateinit var ListaQRviewModel: ListaQRViewModel
 
     var allReportsLiveData = MutableLiveData<List<Qrcodes?>>()
+    var contentQr=""
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         ListaQRviewModel= ViewModelProviders.of(this).get(ListaQRViewModel::class.java)
         val root = inflater.inflate(R.layout.lista_q_r_fragment, container, false)
         val add: ImageView = root.findViewById(R.id.add)
@@ -55,7 +56,7 @@ class ListaQrFragment : Fragment() {
 
         })
         add.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_addQrUpdate, null))
-        textView4.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_detalhesQR, null))
+    //    textView4.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_detalhesQR, null))
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
 
@@ -68,7 +69,6 @@ class ListaQrFragment : Fragment() {
         var folderId = arguments?.getInt("folderId")
 
 
-        //Toast.makeText( activity, folderId.toString(), Toast.LENGTH_LONG).show()
 
         val call = request.getQrCodeByFolder(folderId)
         call.enqueue(object  : Callback<QrCodesReturn> {
@@ -76,9 +76,9 @@ class ListaQrFragment : Fragment() {
 
                 if(response.isSuccessful) {
                     var arrAllReports: Array<Qrcodes?> = arrayOfNulls<Qrcodes>(response.body()!!.data.size)
-
                     for ((index, item) in response.body()!!.data.withIndex()) {
                         arrAllReports[index] = item
+                        contentQr = contentQr+";"+item.content
                     }
 
                     var allReports: List<Qrcodes?> = arrAllReports.asList()
@@ -208,6 +208,21 @@ class ListaQrFragment : Fragment() {
 
 
         return root
+    }
+    override fun onPrepareOptionsMenu(menu: Menu){
+        super.onPrepareOptionsMenu(menu)
+        val item = menu.findItem(R.id.multi_qr)
+        item.isVisible = isVisible
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.multi_qr -> {
+                val bundle = bundleOf("content" to contentQr)
+                findNavController().navigate(R.id.nav_detalhesQR,bundle)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 }

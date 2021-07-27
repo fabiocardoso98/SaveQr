@@ -37,12 +37,12 @@
     <string name="search">search</string>
     <string name="copy">copiar</string>
     <string name="share">partilhar</string>
-    <string name="text_copied" />
+    <string name="text_copied">Copiado!</string>
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
-    <string name="flashlight_turned_off" />
-    <string name="flashlight_turned_on" />
-    <string name="privacy_policy" />
+    <string name="flashlight_turned_off">Flash Desligado</string>
+    <string name="flashlight_turned_on">Flash Ligado</string>
+    <string name="privacy_policy" >privacy_policy</string>
     <string name="qr_code">qr_code</string>
     <string name="enter_your_info">Enter your info</string>
     <string name="generate_qr_code">Generate QR Code</string>

@@ -13,7 +13,6 @@ open class LerQrActivityPresenter: BaseMvpPresenterImpl<LerQrActivityContract.Vi
 
     override fun searchByResultBtnPressed(result: String) {
         var url: String = result
-        if (!Patterns.WEB_URL.matcher(result).matches())
             url = preUrl + result
         mView?.continueScanning()
         mView?.searchInWWW(url)

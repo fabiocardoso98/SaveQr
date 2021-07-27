@@ -10,12 +10,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 
 import ipvc.estg.saveqr.R
+import ipvc.estg.saveqr.ui.lerQr.LerQrActivity
 
 
 class AddQrUpdate : Fragment() {
-//pena
-
-//pena3
     companion object {
         fun newInstance() = AddQrUpdate()
     }
@@ -29,7 +27,9 @@ class AddQrUpdate : Fragment() {
         val root = inflater.inflate(R.layout.add_qr_update_fragment, container, false)
         val addqr: ImageView = root.findViewById(R.id.plus)
         addqr.setOnClickListener {
-
+            val intent = Intent(requireContext(), LerQrActivity::class.java)
+            intent.putExtra("EXTRA", "")
+            startActivity(intent)
         }
         return root
     }
@@ -39,6 +39,4 @@ class AddQrUpdate : Fragment() {
         viewModel = ViewModelProviders.of(this).get(AddQrUpdateViewModel::class.java)
         // TODO: Use the ViewModel
     }
-
-
 }
