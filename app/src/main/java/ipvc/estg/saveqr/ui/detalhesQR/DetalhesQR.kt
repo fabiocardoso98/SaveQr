@@ -1,27 +1,29 @@
 package ipvc.estg.saveqr.ui.detalhesQR
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import androidx.lifecycle.ViewModelProviders
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
+import androidx.lifecycle.ViewModelProviders
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
-
 import ipvc.estg.saveqr.R
 import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.api.endpoints.QrCodesEndpoint
 import ipvc.estg.saveqr.api.models.QrCodeReturn
+import kotlinx.android.synthetic.main.item_list_content.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class DetalhesQR : Fragment() {
 
@@ -63,15 +65,28 @@ class DetalhesQR : Fragment() {
                     val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
                     for (x in 0 until width) {
                         for (y in 0 until height) {
-                            bitmap.setPixel(x, y, if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE)
+                            bitmap.setPixel(
+                                x,
+                                y,
+                                if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE
+                            )
                         }
                     }
                     idIVQrcode?.setImageBitmap(bitmap)
+
                 }
+                idIVQrcode?.setOnClickListener {
+                    val qr = response.body()!!
+                    val uri: Uri =
+                        Uri.parse( qr.data.content) // missing 'http://' will cause crashed
+                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                    startActivity(intent)
+                }
+
             }
 
             override fun onFailure(call: Call<QrCodeReturn>, t: Throwable) {
-                Toast.makeText( activity, "DEU ERRO", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "DEU ERRO", Toast.LENGTH_LONG).show()
 
             }
         })

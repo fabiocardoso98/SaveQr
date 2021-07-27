@@ -14,6 +14,7 @@
         android:id="@+id/idIVQrcode"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        android:clickable="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:contentDescription="@string/qr_code" />
