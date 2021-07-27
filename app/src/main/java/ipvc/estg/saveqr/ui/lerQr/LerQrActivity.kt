@@ -142,7 +142,7 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
         val request = ServiceBuilder.buildService(QrCodesEndpoint::class.java)
         val request1 = ServiceBuilder.buildService(foldersEndpoint::class.java)
         val call = request.postQrCode(
-            "qr exemplos",
+            "qr exemplosssr",
             result,
             5,
             15,
@@ -153,12 +153,13 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
                 response: Response<QrCodeReturn>
             ) {
 
-                val id= response.body()?.data!!.id // id
+                val id= response.body()?.data!!.id
+                val folderId= response.body()?.data!!.folderId
 
 
                     val call1 = request1.postFoldersQr(
-                        id ,
-                        715,
+                        folderId,
+                        id,
                     )
                     call1.enqueue(object : Callback<FoldersQr> {
                         override fun onResponse(
@@ -168,7 +169,7 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
 
 
                             if (response.isSuccessful) {
-                                Toast.makeText(this@LerQrActivity, id, Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(this@LerQrActivity, id, Toast.LENGTH_SHORT).show();
                             }
 
                         }
