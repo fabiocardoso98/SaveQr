@@ -21,7 +21,10 @@ data class FoldersReturn(
     val data: List<Folders>,
     val error: String
 )
-
+data class FoldersQr(
+    val folderId: Int,
+    val qrcodeId: Int
+)
 data class FoldersRegisterReturn(
     val msg: String,
     val status: String,

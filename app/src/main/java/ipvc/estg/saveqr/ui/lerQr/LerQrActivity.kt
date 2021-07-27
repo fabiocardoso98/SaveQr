@@ -18,6 +18,8 @@ import ipvc.estg.saveqr.MainActivity
 import ipvc.estg.saveqr.R
 import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.api.endpoints.QrCodesEndpoint
+import ipvc.estg.saveqr.api.api.endpoints.foldersEndpoint
+import ipvc.estg.saveqr.api.api.models.FoldersQr
 import ipvc.estg.saveqr.api.models.Qrcodes
 import ipvc.estg.saveqr.mvp.BaseMvpActivity
 import ipvc.estg.saveqr.ui.LerQr.LerQrActivityContract
@@ -137,6 +139,7 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
     override fun GravarQr(result: String) {
         val intent = Intent(this@LerQrActivity, MainActivity::class.java)
         val request = ServiceBuilder.buildService(QrCodesEndpoint::class.java)
+        val request1 = ServiceBuilder.buildService(foldersEndpoint::class.java)
         val call = request.postQrCode(
             "qr exemplo",
             result,
@@ -149,30 +152,38 @@ class LerQrActivity : BaseMvpActivity<LerQrActivityContract.View, LerQrActivityC
                 response: Response<Qrcodes>
             ) {
 
-
-                if (response.isSuccessful) {
-                    // Log.d("***","Sucesso")
-                    Toast.makeText(this@LerQrActivity, "Sucesso!", Toast.LENGTH_SHORT)
-                        .show();
-                    //    startActivity(intent)
-                    //   finish()
+                val id= response.body()?.id // id
 
 
+                    val call1 = request1.postFoldersQr(
+                        575 ,
+                        715,
+                    )
+                    call1.enqueue(object : Callback<FoldersQr> {
+                        override fun onResponse(
+                            call1: Call<FoldersQr>,
+                            response: Response<FoldersQr>
+                        ) {
 
-                    // communicator.passDataconn(root.nome.text.toString())
-                    //  communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
-                    // getActivity()?.getSupportFragmentManager()?.beginTransaction().remove(this@RegistarFragment).commit();
 
+                            if (response.isSuccessful) {
+                                Toast.makeText(this@LerQrActivity, "response.body()?.id", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+
+                        override fun onFailure(call1: Call<FoldersQr>, t: Throwable) {
+                            Toast.makeText(this@LerQrActivity, "Erro, tente mais tarde!", Toast.LENGTH_SHORT).show();
+                        }
+                    })
 
                 }
-
-            }
 
             override fun onFailure(call: Call<Qrcodes>, t: Throwable) {
                 Toast.makeText(this@LerQrActivity, "Erro, tente mais tarde!", Toast.LENGTH_SHORT).show();
             }
         })
-    }
+}
 
     //Pedir premissao camara
     //https://www.geeksforgeeks.org/android-how-to-request-permissions-in-android-application/
