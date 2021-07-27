@@ -18,6 +18,7 @@ import androidx.core.graphics.ColorUtils
 import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.api.endpoints.foldersEndpoint
 import ipvc.estg.saveqr.api.api.models.Folders
+import ipvc.estg.saveqr.api.api.models.FoldersRegisterReturn
 import ipvc.estg.saveqr.api.api.models.FoldersReturn
 import ipvc.estg.saveqr.ui.listapasta.TITULO
 import kotlinx.android.synthetic.main.fragment_listapasta.*
@@ -75,23 +76,20 @@ class popup_insertPasta : AppCompatActivity() {
 
         val id: Int? = intent.getIntExtra("id", 0)
 
-
         if (!TextUtils.isEmpty(nomePasta.text)) {
             val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
 
             val call = request.setUpdateFolders(id!!,nomePasta.text.toString())
 
-            call.enqueue(object  : Callback<FoldersReturn> {
-                override fun onResponse(call: Call<FoldersReturn>, response: Response<FoldersReturn>) {
+            call.enqueue(object  : Callback<FoldersRegisterReturn> {
+                override fun onResponse(call: Call<FoldersRegisterReturn>, response: Response<FoldersRegisterReturn>) {
                     if(response.isSuccessful) {
 
                         finish()
-
-
                     }
                 }
 
-                override fun onFailure(call: Call<FoldersReturn>, t: Throwable) {
+                override fun onFailure(call: Call<FoldersRegisterReturn>, t: Throwable) {
                     finish()
                 }
             })
@@ -99,8 +97,6 @@ class popup_insertPasta : AppCompatActivity() {
         } else {
             Toast.makeText(applicationContext, "Campos vazios", Toast.LENGTH_LONG).show()
         }
-
-
     }
 
     override fun onBackPressed() {

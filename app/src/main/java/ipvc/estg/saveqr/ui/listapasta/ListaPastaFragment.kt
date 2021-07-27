@@ -1,21 +1,23 @@
 package ipvc.estg.saveqr.ui.listapasta
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -32,13 +34,13 @@ import ipvc.estg.saveqr.Swipes.SwipeToEditCallback
 import ipvc.estg.saveqr.api.ServiceBuilder
 import ipvc.estg.saveqr.api.api.endpoints.foldersEndpoint
 import ipvc.estg.saveqr.api.api.models.Folders
+import ipvc.estg.saveqr.api.api.models.FoldersRegisterReturn
 import ipvc.estg.saveqr.api.api.models.FoldersReturn
-import ipvc.estg.saveqr.popup_insertPasta
-import ipvc.estg.saveqr.ui.listaqr.ListaQrFragment
 import kotlinx.android.synthetic.main.fragment_listapasta.*
 import kotlinx.android.synthetic.main.fragment_listapasta.view.*
 import kotlinx.android.synthetic.main.fragment_listapasta.view.add
 import kotlinx.android.synthetic.main.listapasta_item.view.*
+import kotlinx.android.synthetic.main.popup_addpasta.*
 import kotlinx.android.synthetic.main.popup_addpasta.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -46,6 +48,7 @@ import retrofit2.Response
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+
 
 class ListaPastaFragment : Fragment() {
 
@@ -203,95 +206,99 @@ class ListaPastaFragment : Fragment() {
                     val position: Int = viewHolder.adapterPosition
                     val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
                     val pastaTemp: Folders? = allPastasLiveData.value!![position]
+                    val mDialogView =
+                        LayoutInflater.from(requireActivity()).inflate(R.layout.popup_addpasta, null)
+                    val mBuilder = AlertDialog.Builder(requireActivity()).setView(mDialogView)
+                    val mAlertDialog = mBuilder.show()
+                    val nome = mDialogView.findViewById<EditText>(R.id.email)
+                    nome.setText(pastaTemp!!.nome)
+                    val id1 = pastaTemp!!.id
+                    val editar = mDialogView.findViewById<TextView>(R.id.textView5)
+                    editar.setText("Editar Pasta")
+                    mDialogView.outPop.setOnClickListener{
+                        listarpasta()
+                        mAlertDialog.dismiss()
+                    }
 
-                    val intent = Intent(requireContext(), popup_insertPasta::class.java)
-                    intent.putExtra("id", pastaTemp!!.id)
-                    intent.putExtra("name", pastaTemp!!.nome)
-                    intent.putExtra("img", pastaTemp!!.img)
-                    intent.putExtra("cor", pastaTemp!!.cor)
-                    intent.putExtra("part", pastaTemp!!.partilhado)
-                    intent.putExtra("dateAdd", pastaTemp!!.dataAdicionado)
-                    intent.putExtra("dateUpd", pastaTemp!!.dataAtualizado)
-                    intent.putExtra("catId", pastaTemp!!.categoryId)
-                    intent.putExtra("userId", pastaTemp!!.userId)
-                    startActivity(intent)
-                    allPastasLiveData.value = allPastasLiveData.value!!.toMutableList().apply {
-                        removeAt(position)
+                    mAlertDialog.setOnCancelListener {
+                       listarpasta()
+                    }
+                    mDialogView.addpasta.setOnClickListener {
 
-                        val call = request.getPastaByUser(idUser)
-                        call.enqueue(object : Callback<FoldersReturn> {
-                            override fun onResponse(
-                                call: Call<FoldersReturn>,
-                                response: Response<FoldersReturn>
-                            ) {
 
-                                if (response.isSuccessful) {
-                                    var arrAllReports: Array<Folders?> =
-                                        arrayOfNulls<Folders>(response.body()!!.data.size)
+                        if (!TextUtils.isEmpty(nome.text)) {
+                            val request = ServiceBuilder.buildService(foldersEndpoint::class.java)
 
-                                    for ((index, item) in response.body()!!.data.withIndex()) {
-                                        arrAllReports[index] = item
+                            val call = request.setUpdateFolders(id1!!,nome.text.toString())
+
+                            call.enqueue(object  : Callback<FoldersRegisterReturn> {
+                                override fun onResponse(call: Call<FoldersRegisterReturn>, response: Response<FoldersRegisterReturn>) {
+                                    if (response.isSuccessful) {
+                                        listarpasta()
+                                        mAlertDialog.dismiss()
+                                    } else {
+                                        Log.d("***", "Falhou")
+
                                     }
-
-                                    var allReports: List<Folders?> = arrAllReports.asList()
-
-                                    allPastasLiveData.value = allReports
-
-
-                                    allPastasLiveData.observe(requireActivity()) { reports ->
-                                        reports.let { adapter.submitList(it) }
-                                    }
-
-                                } else {
-
                                 }
-                            }
+                                override fun onFailure(call: Call<FoldersRegisterReturn>, t: Throwable) {
+                                    Toast.makeText(context, "fail", Toast.LENGTH_SHORT).show()
+                                }
+                            })
 
-                            override fun onFailure(call: Call<FoldersReturn>, t: Throwable) {
-                                Toast.makeText(activity, "DEU ERRO", Toast.LENGTH_LONG).show()
-                            }
-                        })
-                        // communicator.passDataconn(root.nome.text.toString())
-                        //  communicator.passDataconn(id,root.nome.text.toString(),root.username.text.toString(),root.email.text.toString(),root.password.text.toString())
-                        // getActivity()?.getSupportFragmentManager()?.beginTransaction().remove(this@RegistarFragment).commit();
+                        } else {
+                            Toast.makeText(context, "Campos vazios", Toast.LENGTH_LONG).show()
+                        }
 
-
-                    }.toList()
+                    }
 
                 }
+
             }
 
             val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val position: Int = viewHolder.adapterPosition
-                    val id: Int = allPastasLiveData.value?.get(position)?.id ?: 0
+                    val id1: Int = allPastasLiveData.value?.get(position)?.id ?: 0
                     val iduser: Int = allPastasLiveData.value?.get(position)?.userId ?: 0
 
-                    //dinamico ID ID
-                    val callDelete = request.deleteFolders(id, iduser)
+                        val builder = AlertDialog.Builder(activity!!)
+                        builder.setMessage("Tem a certeza que quer eliminar?")
+                            .setCancelable(false)
+                            .setPositiveButton("Sim") { dialog, id ->
+                                val callDelete = request.deleteFolders(id1, iduser)
 
-                    callDelete?.enqueue(object : Callback<Folders> {
-                        override fun onResponse(call: Call<Folders>, response: Response<Folders>) {
+                                callDelete?.enqueue(object : Callback<Folders> {
+                                    override fun onResponse(call: Call<Folders>, response: Response<Folders>) {
 
-                            if (response.isSuccessful) {
+                                        if (response.isSuccessful) {
 
-                                allPastasLiveData.value =
-                                    allPastasLiveData.value!!.toMutableList().apply {
-                                        removeAt(position)
-                                    }.toList()
+                                            allPastasLiveData.value =
+                                                allPastasLiveData.value!!.toMutableList().apply {
+                                                    removeAt(position)
+                                                }.toList()
 
 
-                                Toast.makeText(requireContext(), "Sucesso", Toast.LENGTH_LONG)
-                                    .show()
-                            } else {
-                                Toast.makeText(requireContext(), "Erro", Toast.LENGTH_LONG).show()
+                                            Toast.makeText(requireContext(), "Sucesso", Toast.LENGTH_LONG)
+                                                .show()
+                                        } else {
+                                            Toast.makeText(requireContext(), "Erro", Toast.LENGTH_LONG).show()
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<Folders>, t: Throwable) {
+                                        Toast.makeText(requireContext(), "Erro", Toast.LENGTH_LONG).show()
+                                    }
+                                })
+
                             }
-                        }
+                            .setNegativeButton("Nao") { dialog, id ->
+                                listarpasta()
+                                dialog.dismiss()
+                            }
+                        val alert = builder.create()
+                        alert.show()
 
-                        override fun onFailure(call: Call<Folders>, t: Throwable) {
-                            Toast.makeText(requireContext(), "Erro", Toast.LENGTH_LONG).show()
-                        }
-                    })
                 }
             }
 
@@ -332,7 +339,6 @@ class ListaPastaFragment : Fragment() {
     }
 
 
-
     fun listarpasta() {
         val call = request.getPastaByUser(idUser)
 
@@ -370,5 +376,9 @@ class ListaPastaFragment : Fragment() {
             }
         })
     }
+
+
+
 }
+
 
