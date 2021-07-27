@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -41,6 +42,8 @@ class DetalhesQR : Fragment() {
     ): View? {
         DetalhesQRviewModel= ViewModelProviders.of(this).get(DetalhesQRViewModel::class.java)
         val root = inflater.inflate(R.layout.detalhes_q_r_fragment, container, false)
+        val latlong: TextView = root.findViewById(R.id.registar)
+        val data: TextView = root.findViewById(R.id.date2)
         DetalhesQRviewModel.text.observe(viewLifecycleOwner, Observer {
             //     textView.text = it
 
@@ -54,6 +57,7 @@ class DetalhesQR : Fragment() {
         val QrId = this.arguments?.getInt("QrId")
         val call = request.getQrCodeById(QrId)
         call.enqueue(object : Callback<QrCodeReturn> {
+
             override fun onResponse(call: Call<QrCodeReturn>, response: Response<QrCodeReturn>) {
                 if (response.code() == 200) {
                     val qr = response.body()!!
@@ -73,6 +77,7 @@ class DetalhesQR : Fragment() {
                         }
                     }
                     idIVQrcode?.setImageBitmap(bitmap)
+
                 }
 
                 idIVQrcode?.setOnClickListener {
