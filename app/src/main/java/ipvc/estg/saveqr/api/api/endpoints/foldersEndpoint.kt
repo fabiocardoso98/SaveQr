@@ -1,6 +1,7 @@
 package ipvc.estg.saveqr.api.api.endpoints
 
 import ipvc.estg.saveqr.api.api.models.Folders
+import ipvc.estg.saveqr.api.api.models.FoldersQr
 import ipvc.estg.saveqr.api.api.models.FoldersRegisterReturn
 import ipvc.estg.saveqr.api.api.models.FoldersReturn
 import retrofit2.Call
@@ -19,6 +20,13 @@ interface foldersEndpoint {
         @Field("userId") userId: Int?
 
     ): Call<Folders>
+
+    @FormUrlEncoded
+    @POST("/folders/qrcodes")
+    fun postFoldersQr(
+        @Field("folderId") folderId: Int?,
+        @Field("qrcodeId") qrcodeId: Int?
+    ): Call<FoldersQr>
 
 
     @FormUrlEncoded

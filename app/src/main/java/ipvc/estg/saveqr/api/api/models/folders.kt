@@ -15,6 +15,10 @@ data class Folders(
     val categoryId: Int,
     val userId: Int
 )
+data class FoldersQr(
+    val folderId: Int,
+    val qrcodeId: Int
+)
 data class FoldersReturn(
     val msg: String,
     val status: String,

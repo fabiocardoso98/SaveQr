@@ -5,7 +5,9 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.util.Patterns
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -34,7 +36,7 @@ class DetalhesQR : Fragment() {
 
     private lateinit var DetalhesQRviewModel: DetalhesQRViewModel
     var qrcontent=""
-
+    private val preUrl: String = "http://www.google.com/#q="
     var idIVQrcode: ImageView? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +56,36 @@ class DetalhesQR : Fragment() {
     }
     fun getQr() {
         val request = ServiceBuilder.buildService(QrCodesEndpoint::class.java)
+        val bundle_cont = this.arguments?.getString("content")
+
+        if(bundle_cont != null) {
+
+            val content = bundle_cont
+            val writer = QRCodeWriter()
+            val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512)
+            val width = bitMatrix.width
+            val height = bitMatrix.height
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    bitmap.setPixel(
+                        x,
+                        y,
+                        if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE
+                    )
+                }
+            }
+            idIVQrcode?.setImageBitmap(bitmap)
+
+            idIVQrcode?.setOnClickListener {
+                var url: String = bundle_cont.toString()
+                if (!Patterns.WEB_URL.matcher(url).matches())
+                    url = preUrl + bundle_cont
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            }
+
+        } else
+        {
         val QrId = this.arguments?.getInt("QrId")
         val call = request.getQrCodeById(QrId)
         call.enqueue(object : Callback<QrCodeReturn> {
@@ -82,10 +114,10 @@ class DetalhesQR : Fragment() {
 
                 idIVQrcode?.setOnClickListener {
                     val qr = response.body()!!
-                    val uri: Uri =
-                        Uri.parse( qr.data.content) // missing 'http://' will cause crashed
-                    val intent = Intent(Intent.ACTION_VIEW, uri)
-                    startActivity(intent)
+                    var url: String = qr.data.content
+                    if (!Patterns.WEB_URL.matcher(qr.data.content).matches())
+                        url = preUrl + qr.data.content
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                 }
 
             }
@@ -96,5 +128,7 @@ class DetalhesQR : Fragment() {
             }
         })
     }
+    }
+
 
 }
