@@ -13,7 +13,8 @@ data class Qrcodes(
     val updateDate: Date,
     val categoryId: Int,
     val userId: Int,
-    val folderId: Int
+    val folderId: Int,
+    var selected: Boolean? = false
 )
 
 data class QrCodesReturn(

@@ -6,13 +6,13 @@
     android:layout_height="wrap_content"
     android:id="@+id/cardview"
     app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="#99a8ff"
     android:layout_margin="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/container_card"
-        android:padding="5dp">
+        android:background="@drawable/container_card">
 
         <RelativeLayout
             android:id="@+id/editar"

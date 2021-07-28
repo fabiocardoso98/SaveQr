@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="10dp"
     android:layout_margin="5dp"
+    app:cardCornerRadius="10dp"
     android:id="@+id/cardviewQR"
-    app:cardBackgroundColor="@color/White">
+    app:cardBackgroundColor="#99a8ff">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintQR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/container_card"
-        android:padding="5dp">
+        android:background="@drawable/container_card">
 
 
         <ImageView
